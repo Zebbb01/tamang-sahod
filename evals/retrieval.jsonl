@@ -1,0 +1,60 @@
+{"q": "How is 13th month pay computed?", "expect": [["dole-handbook-2024", "13th month pay (PD 851) — D."], ["dole-handbook-2024", "13th month pay (PD 851) — A."], ["dole-handbook-2024", "13th month pay (PD 851) — C."]]}
+{"q": "Magkano ang 13th month ng empleyadong nag-resign noong June?", "expect": [["dole-handbook-2024", "13th month pay (PD 851) — G."], ["dole-handbook-2024", "13th month pay (PD 851) — D."]]}
+{"q": "When is the deadline to pay 13th month pay?", "expect": [["dole-handbook-2024", "13th month pay (PD 851) — E."]]}
+{"q": "Kasama ba ang overtime sa pag-compute ng 13th month?", "expect": [["dole-handbook-2024", "13th month pay (PD 851) — C."]]}
+{"q": "Are probationary employees entitled to 13th month pay?", "expect": [["dole-handbook-2024", "13th month pay (PD 851) — B."]]}
+{"q": "Pwede bang hatiin ang 13th month, kalahati sa June at kalahati sa December?", "expect": [["dole-handbook-2024", "13th month pay (PD 851) — E."]]}
+{"q": "Is sales commission included in 13th month pay?", "expect": [["dole-handbook-2024", "13th month pay (PD 851) — F."], ["dole-handbook-2024", "13th month pay (PD 851) — C."]]}
+{"q": "Kailangan bang i-report sa DOLE ang binayad na 13th month?", "expect": [["dole-handbook-2024", "13th month pay (PD 851) — L."]]}
+{"q": "Is 13th month pay taxable?", "expect": [["dole-handbook-2024", "13th month pay (PD 851) — J."]]}
+{"q": "Can a company ask DOLE for an exemption from paying 13th month pay?", "expect": [["dole-handbook-2024", "13th month pay (PD 851) — K."], ["dole-handbook-2024", "13th month pay (PD 851) — B."]]}
+{"q": "How much is the pay if the employee works on a regular holiday?", "expect": [["dole-handbook-2024", "Holiday pay (Labor Code Art. 94) — D."], ["dole-handbook-2024", "Pay rates for work on each day type"]]}
+{"q": "Magkano ang bayad kapag pumasok sa special non-working day?", "expect": [["dole-handbook-2024", "Premium pay (Labor Code Arts. 91-93) — D."], ["dole-handbook-2024", "Pay rates for work on each day type"]]}
+{"q": "Does a small sari-sari store with 5 workers need to pay holiday pay?", "expect": [["dole-handbook-2024", "Holiday pay (Labor Code Art. 94) — B."]]}
+{"q": "Hindi pumasok ang staff ko noong araw bago ang holiday, may holiday pay pa ba siya?", "expect": [["dole-handbook-2024", "Holiday pay (Labor Code Art. 94) — E."], ["dole-handbook-2024", "Holiday pay (Labor Code Art. 94) — D."]]}
+{"q": "What is the overtime rate on a regular holiday?", "expect": [["dole-handbook-2024", "Overtime rates on each day type"], ["dole-handbook-2024", "Overtime pay (Labor Code Art. 87) — C."]]}
+{"q": "Is December 24, 2026 a regular holiday or a special day?", "expect": [["proclamation-1006-s-2025", "2026 special (non-working) days"]]}
+{"q": "Anong klaseng holiday ang November 30?", "expect": [["proclamation-1006-s-2025", "2026 regular holidays"], ["dole-handbook-2024", "Holiday pay (Labor Code Art. 94) — C."]]}
+{"q": "Paano ang bayad kung ang holiday ay tumapat sa rest day ng empleyado at pumasok siya?", "expect": [["dole-handbook-2024", "Pay rates for work on each day type"], ["dole-handbook-2024", "Premium pay (Labor Code Arts. 91-93) — D."]]}
+{"q": "What is the pay rate on a double holiday?", "expect": [["dole-handbook-2024", "Pay rates for work on each day type"], ["dole-handbook-2024", "Holiday pay (Labor Code Art. 94) — D."], ["dole-handbook-2024", "Overtime rates on each day type"]]}
+{"q": "Is February 25, 2026 a working day?", "expect": [["proclamation-1006-s-2025", "2026 special (non-working) days and special (working) day"]]}
+{"q": "May bayad ba ang special non-working day kahit hindi pumasok ang empleyado?", "expect": [["dole-handbook-2024", "Premium pay (Labor Code Arts. 91-93) — D."]]}
+{"q": "Paano ang holiday pay sa Maundy Thursday at Good Friday kung absent siya bago nito?", "expect": [["dole-handbook-2024", "Holiday pay (Labor Code Art. 94) — F."]]}
+{"q": "When are Eid'l Fitr and Eid'l Adha in 2026?", "expect": [["proclamation-1006-s-2025", "Eidul Fitr and Eidul Adha"]]}
+{"q": "Do piece rate workers get holiday pay?", "expect": [["dole-handbook-2024", "Holiday pay (Labor Code Art. 94) — H."]]}
+{"q": "How many days of service incentive leave does an employee get?", "expect": [["dole-handbook-2024", "Service incentive leave (Labor Code Art. 95) — A."], ["dole-handbook-2024", "Service incentive leave (Labor Code Art. 95) — B."]]}
+{"q": "Pwede bang i-convert sa pera ang hindi nagamit na leave pag nag-resign?", "expect": [["dole-handbook-2024", "Service incentive leave (Labor Code Art. 95) — D."]]}
+{"q": "Are businesses with fewer than 10 employees required to give service incentive leave?", "expect": [["dole-handbook-2024", "Service incentive leave (Labor Code Art. 95) — B."]]}
+{"q": "Ano ang ibig sabihin ng one year of service para sa service incentive leave?", "expect": [["dole-handbook-2024", "Service incentive leave (Labor Code Art. 95) — C."]]}
+{"q": "Kasama ba sa final pay ang pro-rated 13th month pay?", "expect": [["dole-handbook-2024", "13th month pay (PD 851) — G."]]}
+{"q": "How do I compute the cash value of unused leave when an employee resigns?", "expect": [["dole-handbook-2024", "Service incentive leave (Labor Code Art. 95) — D."]]}
+{"q": "How much is the SSS contribution for a monthly salary of 20,000?", "expect": [["sss-ci-2024-006", "Schedule of SSS contributions"], ["sss-ci-2024-006", "contribution rate and salary credit limits"]]}
+{"q": "Magkano ang PhilHealth contribution ngayon?", "expect": [["philhealth-pa-2025-0002", "premium rate"]]}
+{"q": "What is the maximum Pag-IBIG contribution per month?", "expect": [["hdmf-circular-460", "maximum fund salary"], ["hdmf-circular-460", "contribution rates"]]}
+{"q": "Ano ang MPF sa SSS contribution?", "expect": [["sss-ci-2024-006", "Mandatory Provident Fund"], ["sss-ci-2024-006", "contribution rate and salary credit limits"], ["sss-ci-2024-006", "Schedule of SSS contributions"]]}
+{"q": "What is the SSS contribution rate in 2025?", "expect": [["sss-ci-2024-006", "contribution rate and salary credit limits"]]}
+{"q": "Kasama ba ang overtime at allowance sa basehan ng PhilHealth contribution?", "expect": [["philhealth-pa-2025-0002", "Salary used for PhilHealth"]]}
+{"q": "Magkano ang share ng employer sa Pag-IBIG?", "expect": [["hdmf-circular-460", "contribution rates"]]}
+{"q": "What is the minimum monthly salary credit for SSS?", "expect": [["sss-ci-2024-006", "contribution rate and salary credit limits"], ["sss-ci-2024-006", "Salary credit used for Regular SS"]]}
+{"q": "Hanggang magkano ang ceiling ng PhilHealth premium?", "expect": [["philhealth-pa-2025-0002", "premium rate"]]}
+{"q": "Magkano ang EC na binabayaran ng employer sa SSS?", "expect": [["sss-ci-2024-006", "Schedule of SSS contributions"]]}
+{"q": "How do I register my business with DTI?"}
+{"q": "Magkano ang income tax ng sweldo na 30,000 kada buwan?"}
+{"q": "How much is separation pay for retrenchment?"}
+{"q": "Paano mag-apply ng maternity benefit sa SSS?"}
+{"q": "What is the minimum wage in NCR?"}
+{"q": "How do I file a complaint for illegal dismissal?"}
+{"q": "Pwede ba akong mag-loan sa Pag-IBIG para sa bahay?"}
+{"q": "How do I compute night shift differential?"}
+{"q": "Paano gumawa ng payslip sa Excel?"}
+{"q": "What documents do I need for a mayor's permit?"}
+{"q": "How do I get a TIN for a new employee?"}
+{"q": "Ilang araw ang paternity leave?"}
+{"q": "Can I deduct cash advances from an employee's final pay?"}
+{"q": "How do I register employees with SSS online?"}
+{"q": "What is the penalty for late BIR filing?"}
+{"q": "Magkano ang renta ng stall sa palengke?"}
+{"q": "Paano magluto ng adobo?"}
+{"q": "How do I compute VAT on my sales?"}
+{"q": "Is work from home allowed under Philippine law?"}
+{"q": "Paano mag-apply ng working visa sa Canada?"}

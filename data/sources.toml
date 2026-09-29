@@ -1,0 +1,43 @@
+# Every source the calculators and the search corpus rely on.
+# `file` is the copy kept in data/sources/; `retrieved` is when it was fetched.
+
+[dole-handbook-2024]
+title = "DOLE-BWC Handbook on Workers' Statutory Monetary Benefits, 2024 edition"
+url = "https://bwc.dole.gov.ph/wp-content/uploads/2024/10/Workers-Statutory-Monetary-Benefits-Handbook-2024-Edition.pdf"
+file = "dole-bwc-handbook-2024.pdf"
+retrieved = 2026-09-28
+note = "DOLE's server refuses scripted downloads, so this copy of the same edition came from a law-firm mirror (alburolaw.com)."
+
+[pd-851]
+title = "Presidential Decree No. 851 (13th Month Pay Law)"
+url = "https://www.officialgazette.gov.ph/1975/12/16/presidential-decree-no-851/"
+
+[proclamation-1006-s-2025]
+title = "Proclamation No. 1006, s. 2025: 2026 regular holidays and special days"
+url = "https://www.officialgazette.gov.ph/2025/09/03/proclamation-no-1006-s-2025/"
+retrieved = 2026-09-28
+note = "Text taken from the Supreme Court E-Library copy: https://elibrary.judiciary.gov.ph/thebookshelf/showdocs/7/99678"
+
+[sss-ci-2024-006]
+title = "SSS Circular No. 2024-006: Schedule of SSS contributions effective January 2025"
+url = "https://www.sss.gov.ph/wp-content/uploads/2024/12/CI-2024-006-Publication.pdf"
+file = "sss-ci-2024-006.pdf"
+retrieved = 2026-09-28
+
+[philhealth-pa-2025-0002]
+title = "PhilHealth Advisory No. 2025-0002: Premium contribution for all direct contributors"
+url = "https://www.philhealth.gov.ph/advisories/2025/PA2025-0002.pdf"
+file = "philhealth-pa2025-0002.pdf"
+retrieved = 2026-09-28
+note = "Covers 2025. The same rate, floor and ceiling for 2026 are reported by the Philippine Information Agency; the 2026 advisory itself was not located."
+
+[hdmf-circular-460]
+title = "Pag-IBIG Fund Circular No. 460, as quoted in DBM Circular Letter No. 2024-2"
+url = "https://www.dbm.gov.ph/wp-content/uploads/Issuances/2024/Circular-Letter/CIRCULAR-LETTER-NO-2024-2-DATED-FEBRUARY-01-2024.pdf"
+file = "dbm-cl-2024-2-pagibig-460.pdf"
+retrieved = 2026-09-28
+
+[dole-la-06-20]
+title = "DOLE Labor Advisory No. 06-20: Payment of final pay and issuance of certificate of employment"
+url = "https://www.dole.gov.ph/php_assets/uploads/2020/02/Labor-Advisory-No.-06-20-Guidelines-on-the-Payment-of-Final-Pay-and-Issuance-of-Certificate-of-Emplo.pdf"
+note = "Not in the search corpus yet: DOLE's server refused scripted downloads. The 30-day release rule is cited from the advisory's published summaries."

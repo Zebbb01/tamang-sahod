@@ -1,0 +1,24 @@
+[project]
+name = "tamang-sahod"
+version = "0.1.0"
+description = "Payroll answers for Philippine micro-businesses: exact amounts from tested code, rules quoted from official sources."
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "jinja2",
+    "python-multipart",
+    "httpx",
+    "lancedb",
+    "fastembed",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pypdf",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = ["ignore:Using `httpx` with `starlette.testclient`"]

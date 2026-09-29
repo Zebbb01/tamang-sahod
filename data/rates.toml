@@ -1,0 +1,35 @@
+# Contribution rates, one entry per verified period.
+# `to` is the last date the figures were verified for, not an expiry set by the
+# agency: past it, the calculator refuses until someone re-checks the source.
+
+[[sss]]
+from = 2025-01-01
+to = 2026-12-31
+source = "sss-ci-2024-006"
+msc_min = "5000"
+msc_max = "35000"
+msc_step = "500"
+regular_ss_cap = "20000"   # MSC above this goes to the Mandatory Provident Fund
+er_rate = "0.10"
+ee_rate = "0.05"
+ec_threshold = "15000"     # EC is ec_low below this MSC, ec_high from it
+ec_low = "10"
+ec_high = "30"
+
+[[philhealth]]
+from = 2025-01-01
+to = 2026-12-31
+source = "philhealth-pa-2025-0002"
+rate = "0.05"
+floor = "10000"
+ceiling = "100000"
+
+[[pagibig]]
+from = 2024-02-01
+to = 2026-12-31
+source = "hdmf-circular-460"
+fund_salary_cap = "10000"
+low_salary = "1500"        # at or below this, the employee rate is ee_rate_low
+ee_rate_low = "0.01"
+ee_rate = "0.02"
+er_rate = "0.02"

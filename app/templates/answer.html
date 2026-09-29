@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Your question · TamangSahod{% endblock %}
+{% block content %}
+<p class="back"><a href="/">Ask another question</a></p>
+<p class="asked-plain">You asked: “{{ question }}”</p>
+
+{% if passages %}
+<h1>What the rules say</h1>
+<p class="lead">Quoted word for word from the official source.</p>
+{% include "_passages.html" %}
+
+<h2 class="section">Work it out</h2>
+<ul class="tiles">
+  {% for topic in topics %}
+  <li><a href="/calc/{{ topic }}"><strong>{{ forms[topic].title }}</strong><span>{{ forms[topic].blurb }}</span></a></li>
+  {% endfor %}
+  <li><a href="/"><strong>All calculators</strong><span>13th month, holiday pay, final pay, contributions.</span></a></li>
+</ul>
+{% else %}
+<h1>Not covered yet</h1>
+<p class="lead">TamangSahod answers 13th month pay, holiday pay, final pay and government contributions. For anything else, call the DOLE hotline <a href="tel:1349">1349</a>.</p>
+<ul class="tiles">
+  {% for topic, form in forms.items() %}
+  <li><a href="/calc/{{ topic }}"><strong>{{ form.title }}</strong><span>{{ form.blurb }}</span></a></li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

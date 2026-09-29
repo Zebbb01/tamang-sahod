@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Sources and privacy · TamangSahod{% endblock %}
+{% block content %}
+<p class="back"><a href="/">Home</a></p>
+<h1>Sources and privacy</h1>
+<p class="lead">Amounts come from tested code. Rules are quoted from these documents.</p>
+
+<ul class="sources">
+  {% for key, s in sources.items() %}
+  <li>
+    <a href="{{ s.url }}" rel="noopener" target="_blank">{{ s.title }}</a>
+    {% if s.retrieved %}<span class="hint">Retrieved {{ s.retrieved.strftime('%d %B %Y') }}.</span>{% endif %}
+    {% if s.note %}<span class="hint">{{ s.note }}</span>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+
+<h2 class="section">Privacy</h2>
+<p>No login and no cookies. Salaries and questions are sent only to compute your answer and are not stored or logged.
+When a question is typed, it may be sent to an AI service to fill in the form; that service is used only on terms that
+do not train on what you send. Page visits are counted without cookies, by page name only.</p>
+{% endblock %}

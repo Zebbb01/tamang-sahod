@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}TamangSahod: payroll answers for small businesses{% endblock %}</title>
+  <meta name="description" content="Free payroll calculators for Philippine small businesses: 13th month, holiday pay, final pay and SSS, PhilHealth, Pag-IBIG, with the official rule behind every amount.">
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%231d4ed8'/><text x='16' y='22' font-size='16' font-family='Arial' font-weight='700' fill='white' text-anchor='middle'>₱</text></svg>">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="/">Tamang<span>Sahod</span></a>
+  </header>
+  <main class="page">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="foot">
+    <p><strong>A guide, not legal advice.</strong> For your own case, call the DOLE hotline <a href="tel:1349">1349</a>.</p>
+    <p>No login. What you type is not stored. <a href="/sources">Sources and privacy</a></p>
+  </footer>
+  {% if goatcounter %}
+  <script>window.goatcounter = {path: {{ (track_path or request.url.path)|tojson }}};</script>
+  <script data-goatcounter="https://{{ goatcounter }}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+  {% endif %}
+</body>
+</html>

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% if result %}{% set track_path = "/result/" ~ topic %}{% endif %}
+{% block title %}{{ form.title }} · TamangSahod{% endblock %}
+{% block content %}
+<p class="back"><a href="/">All calculators</a></p>
+
+{% if result %}
+<section class="result" aria-labelledby="result-heading">
+  <p class="result-label" id="result-heading">{{ heading }}</p>
+  <p class="amount">{{ peso(result.total) }}</p>
+  {% if result.parts %}
+  <p class="parts">Deduct from pay <strong>{{ peso(result.parts.employee) }}</strong> · Employer adds <strong>{{ peso(result.parts.employer) }}</strong></p>
+  {% endif %}
+  <dl class="lines">
+    {% for label, amount in result.lines %}
+    <div><dt>{{ label }}</dt><dd>{{ peso(amount) }}</dd></div>
+    {% endfor %}
+  </dl>
+  {% if result.notes %}
+  <ul class="notes">{% for note in result.notes %}<li>{{ note }}</li>{% endfor %}</ul>
+  {% endif %}
+  <p class="cite">Rules used:
+    {% for key in result.sources|unique %}<a href="{{ sources[key].url }}" rel="noopener" target="_blank">{{ sources[key].title }}</a>{% if not loop.last %}; {% endif %}{% endfor %}
+  </p>
+  {% if goatcounter %}
+  <div class="feedback">
+    <span>Was this right?</span>
+    <button type="button" data-goatcounter-click="feedback-yes-{{ topic }}">Yes</button>
+    <button type="button" data-goatcounter-click="feedback-no-{{ topic }}">No</button>
+  </div>
+  <script>
+    document.querySelectorAll('.feedback button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        setTimeout(function () { b.parentElement.innerHTML = '<span>Thanks, noted.</span>'; }, 0);
+      });
+    });
+  </script>
+  {% endif %}
+</section>
+{% endif %}
+
+{% if question %}
+<div class="asked">
+  <p>You asked: “{{ question }}”</p>
+  <p><strong>We filled in what your question said. Check each field, then compute.</strong></p>
+</div>
+{% endif %}
+
+<h1>{{ form.title }}</h1>
+<p class="lead">{{ form.blurb }}</p>
+
+{% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+
+{% macro input(f) %}
+<div class="field{% if f.kind == 'check' %} check{% endif %}">
+  {% set v = values.get(f.name, '') %}
+  {% if f.kind == 'check' %}
+    <input type="checkbox" id="{{ f.name }}" name="{{ f.name }}" {% if v %}checked{% endif %}
+           {% if f.hint %}aria-describedby="{{ f.name }}-hint"{% endif %}>
+    <label for="{{ f.name }}">{{ f.label }}</label>
+  {% elif f.kind == 'yesno' %}
+    <fieldset>
+      <legend>{{ f.label }}</legend>
+      <div class="seg">
+        <input type="radio" id="{{ f.name }}-yes" name="{{ f.name }}" value="yes" {% if v != 'no' %}checked{% endif %}><label for="{{ f.name }}-yes">Yes</label>
+        <input type="radio" id="{{ f.name }}-no" name="{{ f.name }}" value="no" {% if v == 'no' %}checked{% endif %}><label for="{{ f.name }}-no">No</label>
+      </div>
+    </fieldset>
+  {% else %}
+    <label for="{{ f.name }}">{{ f.label }}</label>
+    {% if f.kind == 'select' %}
+      <select id="{{ f.name }}" name="{{ f.name }}">
+        {% for key, text in f.options %}<option value="{{ key }}" {% if v == key %}selected{% endif %}>{{ text }}</option>{% endfor %}
+      </select>
+    {% elif f.kind in ('date', 'month') %}
+      <input type="{{ f.kind }}" id="{{ f.name }}" name="{{ f.name }}" value="{{ v }}"
+             {% if f.kind == 'month' %}placeholder="YYYY-MM"{% endif %}
+             {% if f.hint %}aria-describedby="{{ f.name }}-hint"{% endif %}>
+    {% else %}
+      <div class="{% if f.kind == 'money' %}money{% endif %}">
+        <input type="text" inputmode="decimal" autocomplete="off" id="{{ f.name }}" name="{{ f.name }}" value="{{ v }}"
+               {% if f.hint %}aria-describedby="{{ f.name }}-hint"{% endif %}>
+      </div>
+    {% endif %}
+  {% endif %}
+  {% if f.hint %}<p class="hint" id="{{ f.name }}-hint">{{ f.hint }}</p>{% endif %}
+</div>
+{% endmacro %}
+
+<form class="calc" method="post" action="/calc/{{ topic }}">
+  {% for f in form.fields if not f.more %}{{ input(f) }}{% endfor %}
+  {% set ns = namespace(open=false, any=false) %}
+  {% for f in form.fields if f.more %}{% set ns.any = true %}{% if values.get(f.name, '') != f.default %}{% set ns.open = true %}{% endif %}{% endfor %}
+  {% if ns.any %}
+  <details class="more" {% if ns.open %}open{% endif %}>
+    <summary>More options</summary>
+    {% for f in form.fields if f.more %}{{ input(f) }}{% endfor %}
+  </details>
+  {% endif %}
+  <button class="primary" type="submit">Compute</button>
+</form>
+
+{% if passages %}
+<h2 class="section">Related rules</h2>
+{% include "_passages.html" %}
+{% endif %}
+{% endblock %}

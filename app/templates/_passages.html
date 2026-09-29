@@ -1,0 +1,10 @@
+{% for p in passages %}
+{% set src = sources[p.source] %}
+<article class="passage">
+  <h3>{{ p.title }}</h3>
+  <p class="quote">{{ p.text }}</p>
+  <p class="cite">
+    Source: <a href="{{ src.url }}{% if p.where.startswith('p. ') %}#page={{ p.where[3:] }}{% endif %}" rel="noopener" target="_blank">{{ src.title }}</a>, {{ p.where }}
+  </p>
+</article>
+{% endfor %}

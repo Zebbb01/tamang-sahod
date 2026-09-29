@@ -1,0 +1,20 @@
+{"q": "Magkano ang 13th month ng staff ko na 15,000 ang sweldo kada buwan at 12 months na nagtrabaho?", "topic": "thirteenth", "fields": {"monthly_salary": "15000", "months_worked": "12"}}
+{"q": "My employee earns 18k a month and resigned after 5 months this year. How much 13th month?", "topic": "thirteenth", "fields": {"monthly_salary": "18000", "months_worked": "5"}}
+{"q": "Total basic pay ng empleyado ko this year ay 150,000. Magkano 13th month niya?", "topic": "thirteenth", "fields": {"total_basic": "150000"}}
+{"q": "13th month for someone paid 12,500 monthly who worked 8 months with 2,000 unpaid absences", "topic": "thirteenth", "fields": {"monthly_salary": "12500", "months_worked": "8", "unpaid_absences": "2000"}}
+{"q": "Pumasok ang staff ko sa Dec 30, 645 ang daily rate niya. Magkano bayad?", "topic": "holiday", "fields": {"daily_rate": "645", "date": "2026-12-30", "worked": true}}
+{"q": "How much should I pay a worker with a daily rate of 700 who worked on Christmas Day which is also his rest day?", "topic": "holiday", "fields": {"daily_rate": "700", "date": "2026-12-25", "worked": true, "rest_day": true}}
+{"q": "Hindi pumasok ang helper ko noong November 30, 600 ang daily niya. May bayad ba?", "topic": "holiday", "fields": {"daily_rate": "600", "date": "2026-11-30", "worked": false}}
+{"q": "Worker with 800 daily rate worked 10 hours on December 8", "topic": "holiday", "fields": {"daily_rate": "800", "date": "2026-12-08", "worked": true, "ot_hours": "2"}}
+{"q": "Special non-working day, pumasok siya, 550 daily rate, magkano?", "topic": "holiday", "fields": {"daily_rate": "550", "day_type": "special", "worked": true}}
+{"q": "Regular holiday tapos 3 hours overtime, daily rate 900", "topic": "holiday", "fields": {"daily_rate": "900", "day_type": "regular", "worked": true, "ot_hours": "3"}}
+{"q": "Nag-resign ang staff ko. 20,000 monthly, 9 months this year, 4 days unused leave, 800 daily rate. Magkano final pay?", "topic": "final", "fields": {"monthly_salary": "20000", "months_worked": "9", "leave_days": "4", "daily_rate": "800"}}
+{"q": "Final pay for an employee with 6,000 unpaid salary, 18,000 monthly salary, worked 6 months this year", "topic": "final", "fields": {"unpaid_salary": "6000", "monthly_salary": "18000", "months_worked": "6"}}
+{"q": "Last pay ng empleyadong umalis, may 3.5 days na leave, 610 daily", "topic": "final", "fields": {"leave_days": "3.5", "daily_rate": "610"}}
+{"q": "Magkano ang SSS, PhilHealth at Pag-IBIG ng 25,000 na sweldo?", "topic": "contributions", "fields": {"monthly_salary": "25000"}}
+{"q": "What are the government contributions for a 14,000 monthly salary in October 2026?", "topic": "contributions", "fields": {"monthly_salary": "14000", "month": "2026-10"}}
+{"q": "SSS contribution ng 30k salary", "topic": "contributions", "fields": {"monthly_salary": "30000"}}
+{"q": "Magkano ang income tax ng 40,000 na sweldo?", "topic": "none", "fields": {}}
+{"q": "How much separation pay for an employee retrenched after 5 years?", "topic": "none", "fields": {}}
+{"q": "Paano mag-register ng business sa DTI?", "topic": "none", "fields": {}}
+{"q": "Can I deduct a cash advance from final pay?", "topic": "none", "fields": {}}
