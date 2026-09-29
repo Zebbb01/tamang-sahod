@@ -25,6 +25,7 @@ def test_holiday_result_uses_2026_list(client):
     }).text
     assert "Rizal Day" in page
     assert "₱1,600.00" in page
+    assert "Labor Advisory No. 12-25" in page  # the 2026 pay rules are cited
 
 
 def test_thirteenth_month_result(client):

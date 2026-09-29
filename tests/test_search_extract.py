@@ -25,6 +25,8 @@ def test_topic_of_passage():
     assert topic_of({"source": "dole-handbook-2024", "title": "13th month pay (PD 851) — C. Amount"}) == "thirteenth"
     assert topic_of({"source": "dole-handbook-2024", "title": "Service incentive leave (Labor Code Art. 95) — D. Conversion"}) == "final"
     assert topic_of({"source": "dole-handbook-2024", "title": "Premium pay (Labor Code Arts. 91-93) — D. Premium Pay Rates"}) == "holiday"
+    assert topic_of({"source": "dole-la-06-20", "title": "Final pay: what it includes"}) == "final"
+    assert topic_of({"source": "dole-la-12-25", "title": "2026 regular holidays: pay rules"}) == "holiday"
 
 
 # --- LLM output is untrusted: only known topics and valid values survive ---

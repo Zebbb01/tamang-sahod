@@ -29,7 +29,7 @@ payroll module, so the two do not overlap.
     (at least half written in Taglish).
   - Out-of-scope questions get "not covered", never a guess, on ≥ 19 of 20 probes.
   - Question-to-form extraction is right on ≥ 90% of its eval set.
-  - Running cost ₱0 per month.
+  - Running cost ₱0 per month, apart from a few pesos of image storage (see §5).
   - 30 distinct visitors complete a calculation in the 2 weeks after launch.
 - **Achievable:** one Python service, free tiers only, four topics.
 - **Relevant:** owners compute these every payday; for the builder it is a
@@ -85,8 +85,17 @@ validated before use. It never computes and never writes rule text. If it is
 unset, down or out of quota, the question box falls back to search and the tiles
 keep working. Provider rule: a free tier whose terms do not train on inputs.
 
-**Hosting.** Hugging Face Spaces (free Docker). A scheduled GitHub Action pings
-`/health` every 12 hours so the Space does not sleep between visitors.
+**Hosting.** Google Cloud Run, deployed from the `Dockerfile` by Cloud Build on
+every push to `main`: region `asia-east1`, 2 GiB memory, 1 CPU, 0–2 instances,
+public access. The free tier (180k vCPU-seconds, 360k GiB-seconds and 2M requests a
+month, priced at Tier 1 rates) covers this traffic; the image is larger than
+Artifact Registry's free 0.5 GB, which costs a few pesos a month.
+
+*Changed from the chat design (29 Sep 2026):* Hugging Face now requires a paid plan
+for Docker Spaces. Free 512 MB hosts (Render, Koyeb) cannot hold the app, which uses
+about 1.1 GB once the embedding model is loaded, and the dependencies exceed
+Vercel's 250 MB Python function limit. Cloud Run scales to zero instead of
+sleeping, so the keep-awake workflow was removed.
 
 ## 6. Privacy and safety
 
@@ -130,19 +139,19 @@ used instead.
 - **Free tiers change**: the LLM is optional; nothing else depends on a paid tier.
 - **Wrong answer harms a worker**: official-example tests, owner-confirmed inputs,
   source on every result.
-- **GitHub disables scheduled workflows after 60 days of repo inactivity**: the
-  Space then sleeps and wakes slowly on the next visit; re-enable the workflow.
+- **Cloud Run needs a card on the billing account**: cap it with a budget alert and
+  a maximum of 2 instances. A cold start after a quiet spell takes about 10 seconds.
 
 ## 11. Done when
 
-Status 2026-09-29: the first two items pass locally (58 tests; hit@3 90%,
-out-of-scope 20/20) and are ticked once CI has run them after the first push.
+Status 2026-09-29: the first two items passed in GitHub Actions (58 tests;
+hit@3 95%, out-of-scope 20/20).
 
-- [ ] Four calculators pass every official worked example in CI.
-- [ ] Retrieval hit@3 ≥ 90% and out-of-scope ≥ 19/20, published in the README.
+- [x] Four calculators pass every official worked example in CI.
+- [x] Retrieval hit@3 ≥ 90% and out-of-scope ≥ 19/20, published in the README.
 - [ ] Extraction ≥ 90%, or the LLM left off and that stated in the README.
-- [ ] Live on Hugging Face Spaces; keep-awake workflow green for 7 days.
-- [ ] ₱0 monthly cost confirmed.
+- [ ] Live on Cloud Run with a budget alert set; cold start measured.
+- [ ] First month's bill checked: nothing beyond image storage.
 - [ ] No amount or question text in logs or analytics (checked by test).
 - [ ] Private beta with 5 owners done; their findings fixed or parked.
 - [ ] Public launch posts in 2 Facebook groups by 15 Nov 2026.

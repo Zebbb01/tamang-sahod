@@ -1,12 +1,3 @@
----
-title: TamangSahod
-colorFrom: blue
-colorTo: indigo
-sdk: docker
-app_port: 7860
-pinned: false
----
-
 # TamangSahod
 
 Payroll answers for Philippine micro-businesses. An owner asks in English or Taglish, or
@@ -61,13 +52,13 @@ in URLs, access logs or analytics. Nothing is stored.
 | Measure | Target | Result |
 | --- | --- | --- |
 | Calculators vs official worked examples | 100% | all pass (`pytest`, 58 tests) |
-| Right rule in top 3 results | ≥ 90% | 90% (36/40) |
+| Right rule in top 3 results | ≥ 90% | 95% (41/43) |
 | Out-of-scope questions refused | ≥ 19/20 | 20/20 |
-| In-scope questions answered, not refused | — | 37/40 |
+| In-scope questions answered, not refused | — | 39/43 |
 | Question-to-form extraction | ≥ 90% | not yet run: needs `GROQ_API_KEY` |
-| Running cost | ₱0 | ₱0 (free tiers only) |
+| Running cost | ₱0 | Cloud Run free tier; image storage past 0.5 GB costs a few pesos a month |
 
-Measured 28 September 2026 with `python -m evals.run`. Two caveats. The 40 in-scope and 20
+Measured 29 September 2026 with `python -m evals.run`, locally and in CI. Two caveats. The 43 in-scope and 20
 out-of-scope questions are a seed set written by the builder, half in Taglish; real
 questions from the beta will replace them. And the list of not-covered topics was written
 after seeing which probes slipped through, so 20/20 is optimistic until it is re-measured on
@@ -75,7 +66,7 @@ questions it has not seen.
 
 Worked examples come from the DOLE-BWC Handbook on Workers' Statutory Monetary Benefits
 (₱184,219.96 ÷ 12 = ₱15,351.66; 5.833 days × ₱610 = ₱3,558.13), the SSS 2025 contribution
-table, PhilHealth Advisory 2025-0002 and Pag-IBIG Circular 460. Every source, with where
+table, PhilHealth Advisory 2025-0002, Pag-IBIG Circular 460 and DOLE Labor Advisory 12-25. Every source, with where
 it was fetched from, is listed in `data/sources.toml` and on the site's Sources page.
 
 ## Run it locally
@@ -94,24 +85,25 @@ Optional settings: `GROQ_API_KEY` (question-to-form), `GROQ_MODEL` (default
 
 ## Deploy
 
-The repository is a Hugging Face Space (Docker SDK); the front matter above configures it.
-The image builds the search index at build time and needs no database. After the first
-deploy, set the GitHub repository variable `SPACE_URL` so `keep-awake.yml` pings the Space
-every 12 hours; free Spaces sleep after 48 hours without visits.
+Google Cloud Run, continuously deployed from this repository's `Dockerfile` by Cloud Build.
+The image builds the search index at build time and needs no database. Service settings:
+region `asia-east1` (Tier 1 pricing, close to the Philippines), 2 GiB memory (the app uses
+about 1.1 GB once the model is loaded), 1 CPU, minimum 0 and maximum 2 instances, public
+access. It scales to zero, so the first visit after a quiet spell waits about 10 seconds.
 
 ## Known limits
 
 - Holiday pay assumes a daily-paid employee on a full 8-hour shift. Part-day holiday work,
   night-shift differential and monthly-paid factors are not covered.
-- Final pay leaves out separation pay, deductions and tax. DOLE Labor Advisory 06-20 is
-  cited but not yet in the search corpus: DOLE's server refuses scripted downloads.
+- Final pay leaves out separation pay, deductions and tax.
 - Contributions cover regular employees only, not kasambahay, OFWs or the self-employed,
   and one salary figure is used for both the SSS and PhilHealth bases.
 - Rates are verified through 31 December 2026. PhilHealth's 2026 figures rest on a
   Philippine Information Agency report; the 2026 advisory itself was not located.
 - Only the 2026 holiday list is loaded, and Eid'l Fitr and Eid'l Adha are proclaimed
   separately, so the owner picks those day types by hand.
-- The DOLE handbook copy came from a law-firm mirror of the same edition.
+- DOLE's servers refuse scripted downloads. The two labor advisories were downloaded by
+  hand in a browser; the handbook copy came from a law-firm mirror of the same edition.
 - Retrieval uses a small multilingual model; larger ones have not been compared yet.
 
 A guide, not legal advice. Design and goals: `docs/superpowers/specs/2026-09-28-tamang-sahod-design.md`.

@@ -65,7 +65,7 @@ def topic_of(row: dict) -> str:
         return "contributions"
     if row["title"].startswith("13th month"):
         return "thirteenth"
-    if row["title"].startswith("Service incentive leave"):
+    if row["source"] == "dole-la-06-20" or row["title"].startswith("Service incentive leave"):
         return "final"
     return "holiday"
 

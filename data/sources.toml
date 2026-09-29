@@ -40,4 +40,13 @@ retrieved = 2026-09-28
 [dole-la-06-20]
 title = "DOLE Labor Advisory No. 06-20: Payment of final pay and issuance of certificate of employment"
 url = "https://www.dole.gov.ph/php_assets/uploads/2020/02/Labor-Advisory-No.-06-20-Guidelines-on-the-Payment-of-Final-Pay-and-Issuance-of-Certificate-of-Emplo.pdf"
-note = "Not in the search corpus yet: DOLE's server refused scripted downloads. The 30-day release rule is cited from the advisory's published summaries."
+file = "dole-la-06-20-final-pay.pdf"
+retrieved = 2026-09-29
+note = "Downloaded in a browser, since DOLE's server refuses scripted downloads. The PDF is a scan; the search text was transcribed from it word for word."
+
+[dole-la-12-25]
+title = "DOLE Labor Advisory No. 12-25: Payment of wages for the 2026 regular holidays and special days"
+url = "https://bwc.dole.gov.ph/wp-content/uploads/2025/10/Labor-Advisory-No.-12-25-Payment-of-Wages-for-the-Regular-Holidays-Special-Non-Working-Days-and-Special-Working-Day-for-the-Year-2026-1.pdf"
+file = "dole-la-12-25-holiday-pay-2026.pdf"
+retrieved = 2026-09-29
+note = "Downloaded in a browser, since DOLE's server refuses scripted downloads. Search text is the PDF's text layer with its OCR errors corrected against the page."

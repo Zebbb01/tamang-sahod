@@ -149,8 +149,8 @@ def compute(topic: str, v: dict) -> tuple[calc.Result, str]:
             small_retail_service="small_retail_service" in v,
         )
         result.notes = notes + result.notes
-        if v.get("day_type", "auto") == "auto" or on:
-            result.sources.append("proclamation-1006-s-2025")
+        if on and on.year == 2026:
+            result.sources += ["dole-la-12-25", "proclamation-1006-s-2025"]
         return result, f"{heading} ({calc.DAY_TYPES[day_type]})"
 
     if topic == "final":
