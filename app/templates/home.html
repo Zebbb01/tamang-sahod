@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_icons.html" import tiles %}
 {% block content %}
 <h1>Payroll answers you can check</h1>
 <p class="lead">For small businesses in the Philippines. Every amount shows the official rule it follows.</p>
@@ -8,12 +9,14 @@
   <textarea id="q" name="q" rows="2" maxlength="500" required
             placeholder="e.g. Magkano ang bayad kung pumasok sa Dec 30?"></textarea>
   <button class="primary" type="submit">Ask</button>
+  <p class="hint">Or tap one:</p>
+  <div class="examples">
+    {% for example in examples %}
+    <button class="example" type="submit" name="example" value="{{ example }}" formnovalidate>{{ example }}</button>
+    {% endfor %}
+  </div>
 </form>
 
 <h2 class="section">Or open a calculator</h2>
-<ul class="tiles">
-  {% for topic, form in forms.items() %}
-  <li><a href="/calc/{{ topic }}"><strong>{{ form.title }}</strong><span>{{ form.blurb }}</span></a></li>
-  {% endfor %}
-</ul>
+{{ tiles(forms, forms.keys()) }}
 {% endblock %}

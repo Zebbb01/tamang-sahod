@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_icons.html" import tiles %}
 {% block title %}Your question · TamangSahod{% endblock %}
 {% block content %}
 <p class="back"><a href="/">Ask another question</a></p>
@@ -10,19 +11,11 @@
 {% include "_passages.html" %}
 
 <h2 class="section">Work it out</h2>
-<ul class="tiles">
-  {% for topic in topics %}
-  <li><a href="/calc/{{ topic }}"><strong>{{ forms[topic].title }}</strong><span>{{ forms[topic].blurb }}</span></a></li>
-  {% endfor %}
-  <li><a href="/"><strong>All calculators</strong><span>13th month, holiday pay, final pay, contributions.</span></a></li>
-</ul>
+{{ tiles(forms, topics) }}
+<p class="more-link"><a href="/">All calculators</a></p>
 {% else %}
 <h1>Not covered yet</h1>
-<p class="lead">TamangSahod answers 13th month pay, holiday pay, final pay and government contributions. For anything else, call the DOLE hotline <a href="tel:1349">1349</a>.</p>
-<ul class="tiles">
-  {% for topic, form in forms.items() %}
-  <li><a href="/calc/{{ topic }}"><strong>{{ form.title }}</strong><span>{{ form.blurb }}</span></a></li>
-  {% endfor %}
-</ul>
+<p class="lead">TamangSahod answers salary, 13th month pay, holiday pay, final pay and government contributions. For anything else, call the DOLE hotline <a href="tel:1349">1349</a>.</p>
+{{ tiles(forms, forms.keys()) }}
 {% endif %}
 {% endblock %}

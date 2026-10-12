@@ -56,3 +56,29 @@ def test_parse_salary_question():
                 '"schedule": "six", "unpaid_absences": 5, "special_days_paid": false}}')
     assert got == ("salary", {"rate": D("919.54"), "rate_per": "hour", "hours_per_day": D("8"),
                               "schedule": "six", "unpaid_absences": D("5"), "special_days_paid": False})
+
+
+# --- date typing and holiday chips (app/forms.py) ---
+
+from app.forms import holiday_choices, parse_date  # noqa: E402
+
+
+def test_parse_date_accepts_common_ways_of_writing_it():
+    today = date(2026, 10, 12)
+    for typed in ["2026-12-30", "Dec 30", "December 30, 2026", "30 Dec", "30/12/2026", "12/30/2026"]:
+        assert parse_date(typed, today) == date(2026, 12, 30), typed
+    assert parse_date("11/12/2026", today) == date(2026, 11, 12)  # ambiguous: month first, as on PH forms
+
+
+def test_parse_date_rejects_nonsense():
+    import pytest
+    for typed in ["Feb 30", "sometime", "13/13/2026"]:
+        with pytest.raises(ValueError):
+            parse_date(typed, date(2026, 10, 12))
+
+
+def test_holiday_choices_start_from_today():
+    choices = holiday_choices(date(2026, 10, 12))
+    assert choices[0] == ("2026-11-01", "Nov 1", "All Saints' Day", "special")
+    assert ("2026-12-30", "Dec 30", "Rizal Day", "regular") in choices
+    assert all(value >= "2026-10-12" for value, *_ in choices)

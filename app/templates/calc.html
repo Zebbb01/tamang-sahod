@@ -1,104 +1,168 @@
 {% extends "base.html" %}
 {% if result %}{% set track_path = "/result/" ~ topic %}{% endif %}
+{% block width %}wide{% endblock %}
 {% block title %}{{ form.title }} · TamangSahod{% endblock %}
 {% block content %}
-<p class="back"><a href="/">All calculators</a></p>
+{% set badge = {"regular": "Regular", "special": "Special", "special_working": "Working day"} %}
 
-{% if result %}
-<section class="result" aria-labelledby="result-heading">
-  <p class="result-label" id="result-heading">{{ heading }}</p>
-  <p class="amount">{{ peso(result.total) }}</p>
-  {% if result.parts %}
-  <p class="parts">Deduct from pay <strong>{{ peso(result.parts.employee) }}</strong> · Employer adds <strong>{{ peso(result.parts.employer) }}</strong></p>
-  {% endif %}
-  <dl class="lines">
-    {% for label, amount in result.lines %}
-    <div><dt>{{ label }}</dt><dd>{{ peso(amount) }}</dd></div>
+{% macro hint(f) %}{% if f.hint %}<p class="hint" id="{{ f.name }}-hint">{{ f.hint }}</p>{% endif %}{% endmacro %}
+{% macro described(f) %}{% if f.hint %} aria-describedby="{{ f.name }}-hint"{% endif %}{% endmacro %}
+{% macro shown(f) %}{% if f.show_if %} data-show-if="{{ f.name }}"{% endif %}{% endmacro %}
+
+{% macro control(f) %}
+{% set v = values.get(f.name, '') %}
+{% if f.kind in ('segmented', 'yesno') %}
+<fieldset class="field"{{ shown(f) }}>
+  <legend>{{ f.label }}</legend>
+  <div class="seg">
+    {% for o in (f.options if f.kind == 'segmented' else [('yes', 'Yes'), ('no', 'No')]) %}
+    <label><input type="radio" name="{{ f.name }}" value="{{ o[0] }}" {% if v == o[0] %}checked{% endif %}{{ described(f) }}><span>{{ o[1] }}</span></label>
     {% endfor %}
-  </dl>
-  {% if result.notes %}
-  <ul class="notes">{% for note in result.notes %}<li>{{ note }}</li>{% endfor %}</ul>
-  {% endif %}
-  <p class="cite">Rules used:
-    {% for key in result.sources|unique %}<a href="{{ sources[key].url }}" rel="noopener" target="_blank">{{ sources[key].title }}</a>{% if not loop.last %}; {% endif %}{% endfor %}
-  </p>
-  {% if goatcounter %}
-  <div class="feedback">
-    <span>Was this right?</span>
-    <button type="button" data-goatcounter-click="feedback-yes-{{ topic }}">Yes</button>
-    <button type="button" data-goatcounter-click="feedback-no-{{ topic }}">No</button>
   </div>
-  <script>
-    document.querySelectorAll('.feedback button').forEach(function (b) {
-      b.addEventListener('click', function () {
-        setTimeout(function () { b.parentElement.innerHTML = '<span>Thanks, noted.</span>'; }, 0);
-      });
-    });
-  </script>
-  {% endif %}
-</section>
-{% endif %}
-
-{% if question %}
-<div class="asked">
-  <p>You asked: “{{ question }}”</p>
-  <p><strong>We filled in what your question said. Check each field, then compute.</strong></p>
+  {{ hint(f) }}
+</fieldset>
+{% elif f.kind == 'cards' %}
+<fieldset class="field"{{ shown(f) }}>
+  <legend>{{ f.label }}</legend>
+  <div class="cards">
+    {% for o in f.options %}
+    <label class="card"><input type="radio" name="{{ f.name }}" value="{{ o[0] }}" {% if v == o[0] %}checked{% endif %}>
+      <span class="card-title">{{ o[1] }}</span>{% if o|length > 2 %}<span class="card-hint">{{ o[2] }}</span>{% endif %}</label>
+    {% endfor %}
+  </div>
+  {{ hint(f) }}
+</fieldset>
+{% elif f.kind == 'holiday' %}
+<fieldset class="field">
+  <legend>{{ f.label }}</legend>
+  <div class="days">
+    {% for value, short, name, type in holidays %}
+    <label class="day"><input type="radio" name="date" value="{{ value }}" {% if v == value %}checked{% endif %}>
+      <span class="day-date">{{ short }}</span><span class="day-name">{{ name }}</span>
+      <span class="badge badge-{{ type }}">{{ badge[type] }}</span></label>
+    {% endfor %}
+    <label class="day"><input type="radio" name="date" value="other" {% if v == 'other' %}checked{% endif %}>
+      <span class="day-date">Other date</span><span class="day-name">Type any day</span></label>
+  </div>
+</fieldset>
+{% elif f.kind == 'month' %}
+<fieldset class="field">
+  <legend>{{ f.label }}</legend>
+  <div class="months">
+    {% for value, label in months %}
+    <label class="month"><input type="radio" name="month" value="{{ value }}" {% if v == value %}checked{% endif %}><span>{{ label }}</span></label>
+    {% endfor %}
+  </div>
+</fieldset>
+{% elif f.kind == 'switch' %}
+<div class="field"{{ shown(f) }}>
+  <label class="switch"><input type="checkbox" role="switch" name="{{ f.name }}" {% if v %}checked{% endif %}{{ described(f) }}>
+    <span class="track" aria-hidden="true"></span><span>{{ f.label }}</span></label>
+  {{ hint(f) }}
+</div>
+{% else %}
+<div class="field"{{ shown(f) }}>
+  <label for="{{ f.name }}">{{ f.label }}</label>
+  <div{% if f.kind == 'money' %} class="money"{% endif %}>
+    <input type="text"{% if f.kind != 'text' %} inputmode="decimal"{% endif %} autocomplete="off"
+           id="{{ f.name }}" name="{{ f.name }}" value="{{ v }}"{{ described(f) }}>
+  </div>
+  {{ hint(f) }}
 </div>
 {% endif %}
-
-<h1>{{ form.title }}</h1>
-<p class="lead">{{ form.blurb }}</p>
-
-{% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
-
-{% macro input(f) %}
-<div class="field{% if f.kind == 'check' %} check{% endif %}">
-  {% set v = values.get(f.name, '') %}
-  {% if f.kind == 'check' %}
-    <input type="checkbox" id="{{ f.name }}" name="{{ f.name }}" {% if v %}checked{% endif %}
-           {% if f.hint %}aria-describedby="{{ f.name }}-hint"{% endif %}>
-    <label for="{{ f.name }}">{{ f.label }}</label>
-  {% elif f.kind == 'yesno' %}
-    <fieldset>
-      <legend>{{ f.label }}</legend>
-      <div class="seg">
-        <input type="radio" id="{{ f.name }}-yes" name="{{ f.name }}" value="yes" {% if v != 'no' %}checked{% endif %}><label for="{{ f.name }}-yes">Yes</label>
-        <input type="radio" id="{{ f.name }}-no" name="{{ f.name }}" value="no" {% if v == 'no' %}checked{% endif %}><label for="{{ f.name }}-no">No</label>
-      </div>
-    </fieldset>
-  {% else %}
-    <label for="{{ f.name }}">{{ f.label }}</label>
-    {% if f.kind == 'select' %}
-      <select id="{{ f.name }}" name="{{ f.name }}">
-        {% for key, text in f.options %}<option value="{{ key }}" {% if v == key %}selected{% endif %}>{{ text }}</option>{% endfor %}
-      </select>
-    {% elif f.kind in ('date', 'month') %}
-      <input type="{{ f.kind }}" id="{{ f.name }}" name="{{ f.name }}" value="{{ v }}"
-             {% if f.kind == 'month' %}placeholder="YYYY-MM"{% endif %}
-             {% if f.hint %}aria-describedby="{{ f.name }}-hint"{% endif %}>
-    {% else %}
-      <div class="{% if f.kind == 'money' %}money{% endif %}">
-        <input type="text" inputmode="decimal" autocomplete="off" id="{{ f.name }}" name="{{ f.name }}" value="{{ v }}"
-               {% if f.hint %}aria-describedby="{{ f.name }}-hint"{% endif %}>
-      </div>
-    {% endif %}
-  {% endif %}
-  {% if f.hint %}<p class="hint" id="{{ f.name }}-hint">{{ f.hint }}</p>{% endif %}
-</div>
 {% endmacro %}
 
-<form class="calc" method="post" action="/calc/{{ topic }}">
-  {% for f in form.fields if not f.more %}{{ input(f) }}{% endfor %}
-  {% set ns = namespace(open=false, any=false) %}
-  {% for f in form.fields if f.more %}{% set ns.any = true %}{% if values.get(f.name, '') != f.default %}{% set ns.open = true %}{% endif %}{% endfor %}
-  {% if ns.any %}
-  <details class="more" {% if ns.open %}open{% endif %}>
-    <summary>More options</summary>
-    {% for f in form.fields if f.more %}{{ input(f) }}{% endfor %}
-  </details>
-  {% endif %}
-  <button class="primary" type="submit">Compute</button>
-</form>
+<p class="back"><a href="/">All calculators</a></p>
+
+<div class="calc-layout">
+  <section class="calc-form" id="form">
+    {% if question %}
+    <div class="asked">
+      <p>You asked: “{{ question }}”</p>
+      <p><strong>We filled in what your question said. Check each field, then compute.</strong></p>
+    </div>
+    {% endif %}
+
+    <h1>{{ form.title }}</h1>
+    <p class="lead">{{ form.blurb }}</p>
+
+    <form class="calc" method="post" action="/calc/{{ topic }}#result">
+      <style>
+        {% for f in form.fields if f.show_if %}
+        .calc:has([name="{{ f.show_if[0] }}"][value="{{ f.show_if[1] }}"]:checked) [data-show-if="{{ f.name }}"] { display: block; }
+        {% endfor %}
+      </style>
+      {% for title, fields in steps(form) %}
+      <fieldset class="step">
+        <legend><span class="step-no">{{ loop.index }}</span>{{ title }}</legend>
+        {% for f in fields %}{{ control(f) }}{% endfor %}
+      </fieldset>
+      {% endfor %}
+      {% set extra = form.fields|rejectattr('step')|list %}
+      {% if extra %}
+      {% set ns = namespace(open=false) %}
+      {% for f in extra %}{% if values.get(f.name, '') != f.default %}{% set ns.open = true %}{% endif %}{% endfor %}
+      <details class="more"{% if ns.open %} open{% endif %}>
+        <summary>More options</summary>
+        {% for f in extra %}{{ control(f) }}{% endfor %}
+      </details>
+      {% endif %}
+      <button class="primary" type="submit">{{ form.verb }}</button>
+    </form>
+  </section>
+
+  <aside class="result-col" id="result" aria-live="polite">
+    {% if error %}
+    <div class="result result-error" role="alert">
+      <p class="result-label">Check this first</p>
+      <p class="error-text">{{ error }}</p>
+      <a class="edit-link" href="#form">Edit inputs</a>
+    </div>
+    {% elif result %}
+    <section class="result" aria-labelledby="result-heading">
+      <p class="result-label" id="result-heading">{{ heading }}</p>
+      <p class="amount">{{ peso(result.total) }}</p>
+      {% if result.parts %}
+      <p class="parts">Deduct from pay <strong>{{ peso(result.parts.employee) }}</strong> · Employer adds <strong>{{ peso(result.parts.employer) }}</strong></p>
+      {% endif %}
+      <dl class="lines">
+        {% for label, amount in result.lines %}
+        <div><dt>{{ label }}</dt><dd>{{ peso(amount) }}</dd></div>
+        {% endfor %}
+      </dl>
+      {% if result.notes %}
+      <details class="why" open>
+        <summary>How this was worked out</summary>
+        <ul class="notes">{% for note in result.notes %}<li>{{ note }}</li>{% endfor %}</ul>
+      </details>
+      {% endif %}
+      <p class="cite">Rules used:
+        {% for key in result.sources|unique %}<a href="{{ sources[key].url }}" rel="noopener" target="_blank">{{ sources[key].title }}</a>{% if not loop.last %}; {% endif %}{% endfor %}
+      </p>
+      {% if goatcounter %}
+      <div class="feedback">
+        <span>Was this right?</span>
+        <button type="button" data-goatcounter-click="feedback-yes-{{ topic }}">Yes</button>
+        <button type="button" data-goatcounter-click="feedback-no-{{ topic }}">No</button>
+      </div>
+      <script>
+        document.querySelectorAll('.feedback button').forEach(function (b) {
+          b.addEventListener('click', function () {
+            setTimeout(function () { b.parentElement.innerHTML = '<span>Thanks, noted.</span>'; }, 0);
+          });
+        });
+      </script>
+      {% endif %}
+      <a class="edit-link" href="#form">Edit inputs</a>
+    </section>
+    {% else %}
+    <div class="result placeholder">
+      <p class="result-label">Your result appears here</p>
+      <p>Fill in the steps, then press “{{ form.verb }}”. Every amount comes with the rule it follows.</p>
+    </div>
+    {% endif %}
+  </aside>
+</div>
 
 {% if passages %}
 <h2 class="section">Related rules</h2>

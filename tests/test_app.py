@@ -58,8 +58,41 @@ def test_amounts_never_reach_urls_or_analytics(client):
 
 
 def test_malformed_date_is_explained(client):
-    page = client.post("/calc/holiday", data={"daily_rate": "800", "date": "30-12-2026", "day_type": "auto"}).text
-    assert "Enter the date as YYYY-MM-DD." in page
+    page = client.post("/calc/holiday", data={
+        "daily_rate": "800", "date": "other", "other_date": "sometime", "day_type": "auto"}).text
+    assert "Enter the date like Dec 30 or 2026-12-30." in page
+
+
+@pytest.mark.parametrize("typed", ["Dec 30", "30 Dec 2026", "30/12/2026", "2026-12-30"])
+def test_typed_date_finds_the_holiday(client, typed):
+    page = client.post("/calc/holiday", data={
+        "daily_rate": "800", "date": "other", "other_date": typed, "day_type": "auto", "worked": "yes"}).text
+    assert "Rizal Day" in page
+    assert "₱1,600.00" in page
+
+
+@pytest.mark.parametrize("topic", list(main.FORMS))
+def test_no_native_dropdowns_or_calendars(client, topic):
+    page = client.get(f"/calc/{topic}").text
+    assert "<select" not in page
+    assert 'type="date"' not in page and 'type="month"' not in page
+
+
+def test_fields_that_do_not_apply_are_marked_conditional(client):
+    page = client.get("/calc/salary").text
+    assert 'data-show-if="hours_per_day"' in page
+    assert '[name="rate_per"][value="hour"]:checked' in page
+
+
+def test_result_placeholder_before_compute(client):
+    assert "Your result appears here" in client.get("/calc/salary").text
+
+
+def test_example_question_chip_asks_it(client, monkeypatch):
+    monkeypatch.setattr(forms, "extract", lambda q: None)
+    monkeypatch.setattr(forms.search, "search", lambda q: ([], 0.0))
+    page = client.post("/ask", data={"q": "", "example": "Magkano ang 13th month ng nag-resign?"}).text
+    assert "Magkano ang 13th month ng nag-resign?" in page
 
 
 def test_question_prefills_form_when_extraction_succeeds(client, monkeypatch):
@@ -94,3 +127,9 @@ def test_salary_from_hourly_rate(client):
     }).text
     assert "₱2,206,896.00" in page
     assert "₱7,356.32" in page  # the daily rate it worked from
+
+
+def test_switch_left_off_counts_as_off():
+    # Regression: an empty switch value once counted as "on" (313 days instead of 305).
+    result, _ = forms.compute("salary", forms.form_values("salary", {"rate": "500"}))
+    assert result.total == 500 * 305

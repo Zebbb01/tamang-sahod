@@ -28,7 +28,16 @@ templates.env.globals.update(
 )
 
 
+EXAMPLES = [
+    "Magkano ang 13th month ng nag-resign noong June?",
+    "Holiday pay kung pumasok sa Dec 30?",
+    "SSS, PhilHealth at Pag-IBIG ng 20,000 na sweldo",
+]
+
+
 def render(request: Request, name: str, **context) -> HTMLResponse:
+    context = {"holidays": forms.holiday_choices(), "months": forms.month_choices(), "steps": forms.steps,
+               "examples": EXAMPLES, **context}
     return templates.TemplateResponse(request, name, context)
 
 
@@ -51,7 +60,7 @@ async def calculate(request: Request, topic: str):
     submitted = {k: str(v) for k, v in (await request.form()).items()}
     values = forms.form_values(topic, submitted)
     for f in FORMS[topic].fields:  # unticked checkboxes are absent from the POST
-        if f.kind == "check" and f.name not in submitted:
+        if f.kind == "switch" and f.name not in submitted:
             values.pop(f.name, None)
     try:
         result, heading = forms.compute(topic, values)
@@ -62,7 +71,8 @@ async def calculate(request: Request, topic: str):
 
 @app.post("/ask", response_class=HTMLResponse)
 async def ask(request: Request):
-    question = str((await request.form()).get("q", "")).strip()[:500]
+    data = await request.form()
+    question = (str(data.get("q", "")).strip() or str(data.get("example", "")).strip())[:500]
     if not question:
         return RedirectResponse("/", status_code=303)
     a = forms.answer(question)
