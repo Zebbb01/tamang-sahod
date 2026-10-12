@@ -41,6 +41,9 @@
 {"q": "When must final pay be released after an employee resigns?", "expect": [["dole-la-06-20", "Final pay: when it must be released"]]}
 {"q": "Gaano katagal dapat ibigay ang certificate of employment?", "expect": [["dole-la-06-20", "Certificate of employment"]]}
 {"q": "Ano-ano ang kasama sa final pay ng empleyadong nag-resign?", "expect": [["dole-la-06-20", "Final pay: what it includes"]]}
+{"q": "Magkano sahud ko this year if may absent akong 5 tas per hour 919.54 pesos and 6 days 8 hours a week?", "expect": [["dole-handbook-2024", "Yearly pay — equivalent monthly rate of daily-paid"], ["dole-handbook-2024", "Yearly pay — monthly-paid and daily-paid"]]}
+{"q": "How do I compute the monthly salary of a daily-paid employee?", "expect": [["dole-handbook-2024", "Yearly pay — equivalent monthly rate of daily-paid"], ["dole-handbook-2024", "Yearly pay — monthly-paid and daily-paid"], ["dole-handbook-2024", "Yearly pay — equivalent monthly rate of monthly-paid"]]}
+{"q": "Ilang araw ang bayad sa isang taon kung 5 days a week ang trabaho?", "expect": [["dole-handbook-2024", "for a five-day week"]]}
 {"q": "How do I register my business with DTI?"}
 {"q": "Magkano ang income tax ng sweldo na 30,000 kada buwan?"}
 {"q": "How much is separation pay for retrenchment?"}

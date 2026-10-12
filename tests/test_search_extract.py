@@ -45,3 +45,14 @@ def test_parse_rejects_unknown_topic_and_bad_json():
     assert parse('{"topic": "separation", "fields": {}}') is None
     assert parse('{"topic": "none"}') is None
     assert parse("not json") is None
+
+
+def test_topic_of_yearly_pay_passage():
+    assert topic_of({"source": "dole-handbook-2024", "title": "Yearly pay — daily-paid employees"}) == "salary"
+
+
+def test_parse_salary_question():
+    got = parse('{"topic": "salary", "fields": {"rate": "919.54", "rate_per": "hour", "hours_per_day": 8, '
+                '"schedule": "six", "unpaid_absences": 5, "special_days_paid": false}}')
+    assert got == ("salary", {"rate": D("919.54"), "rate_per": "hour", "hours_per_day": D("8"),
+                              "schedule": "six", "unpaid_absences": D("5"), "special_days_paid": False})

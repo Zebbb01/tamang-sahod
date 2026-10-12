@@ -206,3 +206,32 @@ Employers shall make a report of their compliance via online through the DOLE Es
 6. Amount granted per employee
 7. Total amount of benefits granted
 8. Name, position and telephone number of person giving information
+
+## Yearly pay — monthly-paid and daily-paid employees | p. 19
+
+"Monthly-paid employees" are those who are paid every day of the month, including unworked rest days, special days, and regular holidays. Factor 365 days in a year is used in determining the equivalent monthly salary of monthly-paid employees.
+"Daily-paid employees" are those who are paid on the days they actually worked and on unworked regular holidays.
+
+## Yearly pay — equivalent monthly rate of monthly-paid employees | p. 20
+
+Computation of the Estimated Equivalent Monthly Rate (EEMR) of Monthly-Paid and Daily-Paid Employees. Without prejudice to existing company policies, practices, or agreements, the following formula are merely suggestions and may be used as guides in determining the equivalent monthly minimum wage rates.
+1. Monthly-paid employees. For those who do not work but considered paid on rest days, special (non-working) days, and regular holidays:
+EEMR = Applicable Daily Rate (ADR) × 365.0 / 12 months
+Where 365.0 days = 293.0 Ordinary working days + 52.0 Rest days + 12.0 Regular holidays + 8.0 Special (non-working) days = 365.0 Total equivalent no. of days in a year
+
+## Yearly pay — equivalent monthly rate of daily-paid employees | p. 20
+
+2. Daily-paid employees. For those who are required to work everyday, including Sundays or rest days, special (non-working) days and regular holidays:
+EEMR = Applicable Daily Rate (ADR) × 395.0 / 12 months
+Where 395.0 days = 293.0 Ordinary working days + 67.6 Rest days (52 x 1.3) + 24.0 Regular holidays (12 x 2) + 10.4 Special (non-working) days (8 x 1.3)
+For those who do not work and are not considered paid on Sundays or rest days:
+EEMR = Applicable Daily Rate (ADR) × 313.0 / 12 months
+Where 313.0 days = 293.0 Ordinary working days + 12.0 Regular holidays + 8.0 Special (non-working) days (10.4 if worked)
+Factor 305 may be used instead of 313 if the 8 special (non-working) days are not considered paid.
+
+## Yearly pay — equivalent monthly rate for a five-day week | p. 21
+
+For those who do not work and are not considered paid on Saturdays and Sundays or rest days:
+EEMR = Applicable Daily Rate (ADR) × 261.0 / 12 months
+Where 261.0 days = 241.0 Ordinary working days + 12.0 Regular holidays + 8.0 Special (non-working) days (10.4 if worked)
+Factor 253 may be used instead of 261 if the 8 special (non-working) days are not considered paid.

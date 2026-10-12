@@ -16,6 +16,7 @@ from app.calc import (
     holiday_pay,
     pagibig,
     philhealth,
+    salary,
     sss,
     thirteenth_month,
 )
@@ -180,3 +181,33 @@ def test_final_pay_combines_parts():
     )
     assert D("3558.13") in [amount for _, amount in r.lines]   # Handbook §7 D
     assert r.total == D("5000") + D("15351.66") + D("3558.13")
+
+
+# --- Salary for the year (Handbook pp. 20-21, Estimated Equivalent Monthly Rate factors) ---
+
+@pytest.mark.parametrize("schedule, special_days_paid, paid_days", [
+    ("monthly", False, 365),
+    ("everyday", False, 395),
+    ("six", True, 313),
+    ("six", False, 305),   # footnote h: 305 when the 8 special days are not paid
+    ("five", True, 261),
+    ("five", False, 253),  # footnote i: 253 when the 8 special days are not paid
+])
+def test_salary_uses_handbook_paid_days(schedule, special_days_paid, paid_days):
+    assert salary(D("500"), schedule, special_days_paid=special_days_paid).total == D(500 * paid_days)
+
+
+def test_salary_for_hourly_worker_with_absences():
+    # The beta question: ₱919.54 an hour, 8 hours, 6 days a week, 5 unpaid absences.
+    r = salary(D("919.54") * 8, "six", unpaid_absences=D("5"))
+    assert r.total == D("2206896.00")  # ₱7,356.32 × 305 − 5 × ₱7,356.32
+    assert ("Monthly equivalent (÷ 12)", D("186973.13")) in r.lines
+
+
+def test_salary_rejects_bad_input():
+    with pytest.raises(ValueError):
+        salary(D("0"), "six")
+    with pytest.raises(ValueError):
+        salary(D("500"), "fortnightly")
+    with pytest.raises(ValueError):
+        salary(D("500"), "six", unpaid_absences=D("400"))

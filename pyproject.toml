@@ -11,12 +11,14 @@ dependencies = [
     "httpx",
     "lancedb",
     "fastembed",
+    "streamlit>=1.64.0",
 ]
 
 [dependency-groups]
 dev = [
     "pytest",
     "pypdf",
+    "modal>=1.6.1",
 ]
 
 [tool.pytest.ini_options]

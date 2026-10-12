@@ -38,6 +38,22 @@ DAY_TYPES = {
 }
 
 
+# Paid days in a year by work schedule, as (special days paid, special days unpaid).
+# DOLE-BWC Handbook 2024, "Computation of the Estimated Equivalent Monthly Rate", pp. 20-21.
+PAID_DAYS = {
+    "six": ("313", "305"),
+    "five": ("261", "253"),
+    "everyday": ("395", "395"),
+    "monthly": ("365", "365"),
+}
+SCHEDULES = {
+    "six": "Daily-paid, 6 days a week",
+    "five": "Daily-paid, 5 days a week",
+    "everyday": "Daily-paid, works every day including rest days and holidays",
+    "monthly": "Monthly-paid (paid for every day of the month)",
+}
+
+
 class NotCovered(Exception):
     """No verified rate period or holiday list covers the date asked about."""
 
@@ -239,3 +255,34 @@ def final_pay(
         notes=notes + [n for n in thirteenth.notes if n.startswith("Not required")],
         sources=["dole-la-06-20", "pd-851", "dole-handbook-2024"],
     )
+
+
+# --- Salary for the year (DOLE equivalent-monthly-rate factors) ---
+
+def salary(
+    daily_rate: Decimal,
+    schedule: str,
+    special_days_paid: bool = False,
+    unpaid_absences: Decimal = ZERO,
+) -> Result:
+    _check(schedule in PAID_DAYS, "Unknown work schedule.")
+    _check(daily_rate > 0, "Daily rate must be more than ₱0.")
+    _check(0 <= unpaid_absences <= 366, "Unpaid absences must be between 0 and 366 days.")
+    days = Decimal(PAID_DAYS[schedule][0 if special_days_paid else 1])
+    yearly = peso(daily_rate * days)
+    lines = [("Daily rate", peso(daily_rate)), (f"Yearly pay, {days} paid days × daily rate", yearly)]
+    absences = peso(daily_rate * unpaid_absences)
+    if unpaid_absences:
+        lines.append((f"Less {unpaid_absences.normalize():f} unpaid absence days", absences))
+    lines.append(("Monthly equivalent (÷ 12)", peso(yearly / 12)))
+    notes = [f"Estimate using DOLE's equivalent-monthly-rate factor: {days} paid days a year for "
+             f"{SCHEDULES[schedule].lower()}."]
+    if schedule in ("six", "five") and not special_days_paid:
+        notes.append("Special (non-working) days are counted as unpaid (no work, no pay). "
+                     "If your company pays them, tick that option.")
+    notes += [
+        "Leaves out overtime, holiday and rest-day premiums, night differential, 13th month pay, "
+        "and deductions such as tax and contributions.",
+        "The real number of paid days shifts a little with each year's holidays.",
+    ]
+    return Result(yearly - absences, lines=lines, notes=notes, sources=["dole-handbook-2024"])

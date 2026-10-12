@@ -3,7 +3,7 @@ import re
 import pytest
 from fastapi.testclient import TestClient
 
-from app import main
+from app import forms, main
 
 
 @pytest.fixture
@@ -64,8 +64,8 @@ def test_malformed_date_is_explained(client):
 
 def test_question_prefills_form_when_extraction_succeeds(client, monkeypatch):
     from decimal import Decimal
-    monkeypatch.setattr(main, "extract", lambda q: ("holiday", {"daily_rate": Decimal("645"), "worked": True}))
-    monkeypatch.setattr(main.search, "search", lambda q: ([], 0.0))
+    monkeypatch.setattr(forms, "extract", lambda q: ("holiday", {"daily_rate": Decimal("645"), "worked": True}))
+    monkeypatch.setattr(forms.search, "search", lambda q: ([], 0.0))
     page = client.post("/ask", data={"q": "Pumasok siya noong Dec 30, 645 ang daily"}).text
     assert 'value="645"' in page
     assert "Pumasok siya noong Dec 30" in page
@@ -73,12 +73,12 @@ def test_question_prefills_form_when_extraction_succeeds(client, monkeypatch):
 
 
 def test_question_without_index_or_llm_is_not_covered(client, monkeypatch):
-    monkeypatch.setattr(main, "extract", lambda q: None)
+    monkeypatch.setattr(forms, "extract", lambda q: None)
 
     def broken(q):
         raise RuntimeError("no index")
 
-    monkeypatch.setattr(main.search, "search", broken)
+    monkeypatch.setattr(forms.search, "search", broken)
     page = client.post("/ask", data={"q": "How do I register with DTI?"}).text
     assert "Not covered yet" in page
     assert "1349" in page
@@ -86,3 +86,11 @@ def test_question_without_index_or_llm_is_not_covered(client, monkeypatch):
 
 def test_health(client):
     assert client.get("/health").text == "ok"
+
+
+def test_salary_from_hourly_rate(client):
+    page = client.post("/calc/salary", data={
+        "rate": "919.54", "rate_per": "hour", "hours_per_day": "8", "schedule": "six", "unpaid_absences": "5",
+    }).text
+    assert "₱2,206,896.00" in page
+    assert "₱7,356.32" in page  # the daily rate it worked from

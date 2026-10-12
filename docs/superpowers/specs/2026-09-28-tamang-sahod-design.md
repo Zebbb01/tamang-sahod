@@ -22,7 +22,7 @@ payroll module, so the two do not overlap.
 
 - **Specific:** a free, mobile-first web app. An owner asks a payroll question in
   English or Taglish, or opens one of four calculators, and gets the exact peso
-  amount with the official rule it follows. Four topics only.
+  amount with the official rule it follows. Five topics only.
 - **Measurable:**
   - Calculators match 100% of the worked examples taken from official sources.
   - Retrieval puts the right source in the top 3 for ≥ 90% of the eval questions
@@ -31,7 +31,7 @@ payroll module, so the two do not overlap.
   - Question-to-form extraction is right on ≥ 90% of its eval set.
   - Running cost ₱0 per month, apart from a few pesos of image storage (see §5).
   - 30 distinct visitors complete a calculation in the 2 weeks after launch.
-- **Achievable:** one Python service, free tiers only, four topics.
+- **Achievable:** one Python service, free tiers only, five topics.
 - **Relevant:** owners compute these every payday; for the builder it is a
   published, measured AI project in the Python/vector-search space.
 - **Time-bound:** code built 28 Sep 2026. Private beta with 5 owners, then public
@@ -40,8 +40,14 @@ payroll module, so the two do not overlap.
 
 ## 4. Scope
 
-**In v1:** 13th month pay · holiday pay (2026 day types) · final pay · SSS,
+**In v1:** salary for the year (added 2026-09-29, see below) · 13th month pay · holiday pay (2026 day types) · final pay · SSS,
 PhilHealth and Pag-IBIG monthly contributions.
+
+*Added from the first test on a real payroll:* the builder asked "Magkano sahud ko this
+year if may absent akong 5 tas per hour 919.54 pesos and 6 days 8 hours a week?" and got
+holiday rules back, because no topic covered yearly pay. The salary calculator uses the
+DOLE handbook's equivalent-monthly-rate factors (pp. 20–21), and the question is now in the
+eval set.
 
 **Not in v1 (parked):** separation pay, night-shift differential, ordinary-day
 overtime, withholding tax, payslips, accounts or login, kasambahay and OFW
@@ -85,17 +91,17 @@ validated before use. It never computes and never writes rule text. If it is
 unset, down or out of quota, the question box falls back to search and the tiles
 keep working. Provider rule: a free tier whose terms do not train on inputs.
 
-**Hosting.** Google Cloud Run, deployed from the `Dockerfile` by Cloud Build on
-every push to `main`: region `asia-east1`, 2 GiB memory, 1 CPU, 0–2 instances,
-public access. The free tier (180k vCPU-seconds, 360k GiB-seconds and 2M requests a
-month, priced at Tier 1 rates) covers this traffic; the image is larger than
-Artifact Registry's free 0.5 GB, which costs a few pesos a month.
+**Hosting.** Modal, from `modal_app.py`: 2 GiB memory, 1 CPU, scale to zero, warm
+for 5 minutes after the last request. The Starter plan's $30 of free compute a month
+covers this traffic (about $0.06 per warm hour) and needs no card; without a payment
+method, work stops at the limit instead of billing.
 
-*Changed from the chat design (29 Sep 2026):* Hugging Face now requires a paid plan
-for Docker Spaces. Free 512 MB hosts (Render, Koyeb) cannot hold the app, which uses
-about 1.1 GB once the embedding model is loaded, and the dependencies exceed
-Vercel's 250 MB Python function limit. Cloud Run scales to zero instead of
-sleeping, so the keep-awake workflow was removed.
+*Changed from the chat design:* Hugging Face now requires a paid plan for Docker
+Spaces. Free 512 MB hosts (Render, Koyeb) cannot hold the app, which uses about
+1.1 GB once the embedding model is loaded, and the dependencies exceed Vercel's
+250 MB Python function limit. Google Cloud Run (tried 29 Sep) needs a card on a
+billing account, which the builder did not want to add. The `Dockerfile` stays for
+any container host, and `streamlit_app.py` for Streamlit Community Cloud.
 
 ## 6. Privacy and safety
 
@@ -150,7 +156,7 @@ hit@3 95%, out-of-scope 20/20).
 - [x] Four calculators pass every official worked example in CI.
 - [x] Retrieval hit@3 ≥ 90% and out-of-scope ≥ 19/20, published in the README.
 - [ ] Extraction ≥ 90%, or the LLM left off and that stated in the README.
-- [ ] Live on Cloud Run with a budget alert set; cold start measured.
+- [ ] Live on Modal; cold start measured.
 - [ ] First month's bill checked: nothing beyond image storage.
 - [ ] No amount or question text in logs or analytics (checked by test).
 - [ ] Private beta with 5 owners done; their findings fixed or parked.

@@ -63,6 +63,8 @@ def topic_of(row: dict) -> str:
     """The calculator a passage belongs with."""
     if row["source"] in CONTRIBUTION_SOURCES:
         return "contributions"
+    if row["title"].startswith("Yearly pay"):
+        return "salary"
     if row["title"].startswith("13th month"):
         return "thirteenth"
     if row["source"] == "dole-la-06-20" or row["title"].startswith("Service incentive leave"):

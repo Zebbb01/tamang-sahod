@@ -1,7 +1,7 @@
 # TamangSahod
 
 Payroll answers for Philippine micro-businesses. An owner asks in English or Taglish, or
-opens one of four calculators, and gets the exact peso amount together with the official
+opens one of five calculators, and gets the exact peso amount together with the official
 rule it follows, quoted word for word.
 
 ## The problem
@@ -14,13 +14,15 @@ a DOLE complaint.
 
 ## What it does
 
+- **Salary for the year:** yearly and monthly pay from an hourly or daily rate, using DOLE's
+  equivalent-monthly-rate factors (305 or 313 paid days for a 6-day week, 253 or 261 for 5).
 - **13th month pay:** one-twelfth of basic salary earned, pro-rated for part years.
 - **Holiday and rest-day pay:** every 2026 day type from Proclamation 1006, with overtime,
   rest days, and the exemption for small retail and service businesses.
 - **Final pay:** unpaid salary, pro-rated 13th month and unused leave converted to cash.
 - **SSS, PhilHealth, Pag-IBIG:** employee and employer shares for a monthly salary.
 - **Ask a question:** returns the matching rule passages, or pre-fills a calculator for the
-  owner to check. Anything outside these four topics gets "not covered" and the DOLE
+  owner to check. Anything outside these five topics gets "not covered" and the DOLE
   hotline, never a guess.
 
 ## How it works
@@ -51,14 +53,14 @@ in URLs, access logs or analytics. Nothing is stored.
 
 | Measure | Target | Result |
 | --- | --- | --- |
-| Calculators vs official worked examples | 100% | all pass (`pytest`, 58 tests) |
-| Right rule in top 3 results | ≥ 90% | 95% (41/43) |
+| Calculators vs official worked examples | 100% | all pass (`pytest`, 74 tests) |
+| Right rule in top 3 results | ≥ 90% | 96% (44/46) |
 | Out-of-scope questions refused | ≥ 19/20 | 20/20 |
-| In-scope questions answered, not refused | — | 39/43 |
+| In-scope questions answered, not refused | — | 41/46 |
 | Question-to-form extraction | ≥ 90% | not yet run: needs `GROQ_API_KEY` |
-| Running cost | ₱0 | Cloud Run free tier; image storage past 0.5 GB costs a few pesos a month |
+| Running cost | ₱0 | Modal Starter: $30 of free compute a month, no card |
 
-Measured 29 September 2026 with `python -m evals.run`, locally and in CI. Two caveats. The 43 in-scope and 20
+Measured 12 October 2026 with `python -m evals.run`, locally and in CI. Two caveats. The 46 in-scope and 20
 out-of-scope questions are a seed set written by the builder, half in Taglish; real
 questions from the beta will replace them. And the list of not-covered topics was written
 after seeing which probes slipped through, so 20/20 is optimistic until it is re-measured on
@@ -85,14 +87,23 @@ Optional settings: `GROQ_API_KEY` (question-to-form), `GROQ_MODEL` (default
 
 ## Deploy
 
-Google Cloud Run, continuously deployed from this repository's `Dockerfile` by Cloud Build.
-The image builds the search index at build time and needs no database. Service settings:
-region `asia-east1` (Tier 1 pricing, close to the Philippines), 2 GiB memory (the app uses
-about 1.1 GB once the model is loaded), 1 CPU, minimum 0 and maximum 2 instances, public
-access. It scales to zero, so the first visit after a quiet spell waits about 10 seconds.
+**Modal** (free Starter credits, no card), from `modal_app.py`:
+
+```
+uv run modal token new                 # once: approve in the browser
+uv run modal deploy modal_app.py
+```
+
+The image builds the search index at build time and needs no database. The app uses about
+1.1 GB once the model is loaded, so it gets 2 GiB; it scales to zero, and a visit after a
+quiet spell waits for a cold start. Two alternatives are kept: the `Dockerfile` for any
+container host (Google Cloud Run needs a card), and `streamlit_app.py` for Streamlit
+Community Cloud, which runs the same calculators in Streamlit's own look.
 
 ## Known limits
 
+- Salary for the year is an estimate from DOLE's paid-day factors; it leaves out overtime,
+  premiums, 13th month pay and deductions.
 - Holiday pay assumes a daily-paid employee on a full 8-hour shift. Part-day holiday work,
   night-shift differential and monthly-paid factors are not covered.
 - Final pay leaves out separation pay, deductions and tax.

@@ -18,3 +18,4 @@
 {"q": "How much separation pay for an employee retrenched after 5 years?", "topic": "none", "fields": {}}
 {"q": "Paano mag-register ng business sa DTI?", "topic": "none", "fields": {}}
 {"q": "Can I deduct a cash advance from final pay?", "topic": "none", "fields": {}}
+{"q": "Magkano sahud ko this year if may absent akong 5 tas per hour 919.54 pesos and 6 days 8 hours a week?", "topic": "salary", "fields": {"rate": "919.54", "rate_per": "hour", "hours_per_day": "8", "schedule": "six", "unpaid_absences": "5"}}

@@ -13,17 +13,21 @@ from decimal import Decimal, InvalidOperation
 
 import httpx
 
-from app.calc import DAY_TYPES
+from app.calc import DAY_TYPES, SCHEDULES
 
 URL = "https://api.groq.com/openai/v1/chat/completions"
 MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-20b")
 
 PROMPT = """You turn a Philippine payroll question into JSON for a calculator. Today is {today}.
 Reply with JSON only: {{"topic": "...", "fields": {{...}}}}
-topic is one of: "thirteenth" (13th month pay), "holiday" (holiday, rest day or special day pay),
+topic is one of: "salary" (pay for a year or month from an hourly or daily rate),
+"thirteenth" (13th month pay), "holiday" (holiday, rest day or special day pay),
 "final" (final pay / last pay after resigning or being let go), "contributions" (SSS, PhilHealth,
 Pag-IBIG), or "none" for anything else (taxes, separation pay, loans, leave rules, other topics).
 Fields, filled only when the question states them:
+- salary: rate, rate_per (hour or day), hours_per_day, schedule (six = 6 days a week,
+  five = 5 days a week, everyday, monthly = monthly-paid), unpaid_absences (days),
+  special_days_paid (true/false)
 - thirteenth: monthly_salary, months_worked (0-12), unpaid_absences, total_basic
 - holiday: daily_rate, date (YYYY-MM-DD), day_type (regular, special, special_working,
   double_regular, double_special, ordinary), worked (true/false), rest_day (true/false), ot_hours
@@ -73,6 +77,9 @@ def _day_type(value) -> str | None:
 
 MONTHS = _range(0, 12)
 FIELDS = {
+    "salary": {"rate": _money, "rate_per": lambda v: v if v in ("hour", "day") else None,
+               "hours_per_day": _range(1, 24), "schedule": lambda v: v if v in SCHEDULES else None,
+               "unpaid_absences": _range(0, 366), "special_days_paid": _flag},
     "thirteenth": {"monthly_salary": _money, "months_worked": MONTHS, "unpaid_absences": _money, "total_basic": _money},
     "holiday": {"daily_rate": _money, "date": _date, "day_type": _day_type, "worked": _flag,
                 "rest_day": _flag, "ot_hours": _range(0, 16)},
