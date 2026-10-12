@@ -1,6 +1,5 @@
-"""The four calculator forms and the question flow, shared by both front ends
-(FastAPI in app/main.py, Streamlit in streamlit_app.py). Values arrive as strings,
-the way a form submits them."""
+"""The calculator forms and the question flow behind the FastAPI app (app/main.py).
+Values arrive as strings, the way a form submits them."""
 
 import tomllib
 from dataclasses import dataclass, field

@@ -1,17 +1,21 @@
-"""Deploy the FastAPI app to Modal (free Starter credits, no card):
+"""Deploy the FastAPI app to Modal:
 
+    uv run modal token new                 # once: approve in the browser
     uv run modal deploy modal_app.py
 
-The image installs the dependencies, copies the code and source data, then
+The image installs the locked dependencies, copies the code and source data, then
 downloads the embedding model and builds the search index once, at build time.
-The app scales to zero; a visit after a quiet spell waits for a cold start.
+
+Sized for the Starter plan without a card ($1 of compute a month): half a CPU, and
+containers scale to zero two minutes after the last request. A visit after a quiet
+spell waits for a cold start while the model loads.
 """
 
 import modal
 
 image = (
     modal.Image.debian_slim(python_version="3.13")
-    .pip_install_from_pyproject("pyproject.toml")
+    .uv_sync()
     .add_local_dir("app", "/root/app", copy=True)
     .add_local_dir("data", "/root/data", copy=True, ignore=["index", "models"])
     .run_commands("cd /root && python -m app.search")
@@ -20,9 +24,8 @@ image = (
 app = modal.App("tamang-sahod", image=image)
 
 
-# About 1.1 GB in use once the model is loaded, so 2 GiB. Containers stay warm for
-# 5 minutes after the last request, then scale to zero.
-@app.function(memory=2048, cpu=1.0, scaledown_window=300)
+# About 1.1 GB in use once the model is loaded; memory is billed on actual use.
+@app.function(cpu=0.5, memory=1024, scaledown_window=120, timeout=60)
 @modal.concurrent(max_inputs=20)
 @modal.asgi_app()
 def web():

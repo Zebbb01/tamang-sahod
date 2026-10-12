@@ -1,5 +1,7 @@
 # TamangSahod
 
+**Live:** https://zebbb01--tamang-sahod-web.modal.run (the first visit after a quiet spell takes about 5 seconds to wake)
+
 Payroll answers for Philippine micro-businesses. An owner asks in English or Taglish, or
 opens one of five calculators, and gets the exact peso amount together with the official
 rule it follows, quoted word for word.
@@ -58,7 +60,7 @@ in URLs, access logs or analytics. Nothing is stored.
 | Out-of-scope questions refused | ≥ 19/20 | 20/20 |
 | In-scope questions answered, not refused | — | 41/46 |
 | Question-to-form extraction | ≥ 90% | not yet run: needs `GROQ_API_KEY` |
-| Running cost | ₱0 | Modal Starter: $30 of free compute a month, no card |
+| Running cost | ₱0 | Modal Starter without a card: $1 of compute a month |
 
 Measured 12 October 2026 with `python -m evals.run`, locally and in CI. Two caveats. The 46 in-scope and 20
 out-of-scope questions are a seed set written by the builder, half in Taglish; real
@@ -87,18 +89,19 @@ Optional settings: `GROQ_API_KEY` (question-to-form), `GROQ_MODEL` (default
 
 ## Deploy
 
-**Modal** (free Starter credits, no card), from `modal_app.py`:
+**Modal**, from `modal_app.py`:
 
 ```
 uv run modal token new                 # once: approve in the browser
 uv run modal deploy modal_app.py
 ```
 
-The image builds the search index at build time and needs no database. The app uses about
-1.1 GB once the model is loaded, so it gets 2 GiB; it scales to zero, and a visit after a
-quiet spell waits for a cold start. Two alternatives are kept: the `Dockerfile` for any
-container host (Google Cloud Run needs a card), and `streamlit_app.py` for Streamlit
-Community Cloud, which runs the same calculators in Streamlit's own look.
+The image installs the locked dependencies and builds the search index at build time; there
+is no database. Without a card, the Starter plan gives $1 of compute a month, so the app runs
+on half a CPU and scales to zero two minutes after the last request: roughly 30 warm hours a
+month, after which it stops until the next month. Measured on 12 October 2026: 4.7 s to wake,
+6.8 s for the first question after waking (the embedding model loads), under a second after
+that. The `Dockerfile` serves the same app on any container host.
 
 ## Known limits
 

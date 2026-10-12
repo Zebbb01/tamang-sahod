@@ -91,17 +91,19 @@ validated before use. It never computes and never writes rule text. If it is
 unset, down or out of quota, the question box falls back to search and the tiles
 keep working. Provider rule: a free tier whose terms do not train on inputs.
 
-**Hosting.** Modal, from `modal_app.py`: 2 GiB memory, 1 CPU, scale to zero, warm
-for 5 minutes after the last request. The Starter plan's $30 of free compute a month
-covers this traffic (about $0.06 per warm hour) and needs no card; without a payment
-method, work stops at the limit instead of billing.
+**Hosting.** Modal, from `modal_app.py`: half a CPU, scale to zero, warm for two
+minutes after the last request. Without a card the Starter plan gives $1 of compute a
+month (not the advertised $30), about 30 warm hours at roughly $0.03 an hour; past
+that, the app stops until the next month instead of billing. Enough for the beta and
+launch traffic in §3; adding a card later raises it to $30.
 
 *Changed from the chat design:* Hugging Face now requires a paid plan for Docker
 Spaces. Free 512 MB hosts (Render, Koyeb) cannot hold the app, which uses about
 1.1 GB once the embedding model is loaded, and the dependencies exceed Vercel's
 250 MB Python function limit. Google Cloud Run (tried 29 Sep) needs a card on a
-billing account, which the builder did not want to add. The `Dockerfile` stays for
-any container host, and `streamlit_app.py` for Streamlit Community Cloud.
+billing account, which the builder did not want to add. A Streamlit front end was
+built for Streamlit Community Cloud and removed once Modal served the custom UI. The
+`Dockerfile` stays for any container host.
 
 ## 6. Privacy and safety
 
@@ -156,7 +158,7 @@ hit@3 95%, out-of-scope 20/20).
 - [x] Four calculators pass every official worked example in CI.
 - [x] Retrieval hit@3 ≥ 90% and out-of-scope ≥ 19/20, published in the README.
 - [ ] Extraction ≥ 90%, or the LLM left off and that stated in the README.
-- [ ] Live on Modal; cold start measured.
+- [x] Live on Modal (https://zebbb01--tamang-sahod-web.modal.run); cold start 4.7 s, first question 6.8 s.
 - [ ] First month's bill checked: nothing beyond image storage.
 - [ ] No amount or question text in logs or analytics (checked by test).
 - [ ] Private beta with 5 owners done; their findings fixed or parked.
