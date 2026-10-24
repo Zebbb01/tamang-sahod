@@ -106,6 +106,15 @@ FORMS = {
         Field("monthly_salary", "Monthly salary", "money", step="Salary"),
         Field("month", "Which month is this for?", "month", step="Month"),
     ]),
+    "cost": Form("Cost of a worker", "What one worker costs you this year: salary, employer shares, 13th month.",
+                 "Compute the cost", [
+        Field("rate", "Rate", "money", step="Pay"),
+        Field("rate_per", "Paid per", "segmented", default="month", step="Pay",
+              options=[("month", "Month"), ("day", "Day")]),
+        Field("schedule", "Work schedule", "cards", default="six", step="Pay", options=SCHEDULE_OPTIONS[:3],
+              show_if=("rate_per", "day")),
+        Field("month", "First month on payroll this year", "month", step="Start"),
+    ]),
 }
 
 
@@ -242,6 +251,19 @@ def compute(topic: str, v: dict) -> tuple[calc.Result, str]:
         on = date.fromisoformat(f"{month}-01")
     except ValueError:
         raise ValueError("Enter the month as YYYY-MM.") from None
+
+    if topic == "cost":
+        rate, notes = money(v, "rate", "Rate"), []
+        if v.get("rate_per", "month") == "day":
+            schedule = v.get("schedule", "six")
+            yearly = calc.salary(rate, schedule)
+            rate = calc.peso(yearly.total / 12)
+            notes.append(f"Daily rate × {calc.PAID_DAYS[schedule][1]} paid days ÷ 12 = "
+                         f"₱{rate:,.2f} a month, by DOLE's equivalent-monthly-rate factor.")
+        result = calc.worker_cost(rate, on)
+        result.notes = notes + result.notes
+        return result, f"Cost to you, {on:%b}–Dec {on.year}"
+
     return calc.contributions(money(v, "monthly_salary", "Monthly salary"), on), f"Contributions for {on:%B %Y}"
 
 
@@ -249,6 +271,8 @@ def form_values(topic: str, given: dict | None = None) -> dict:
     values = {f.name: f.default for f in FORMS[topic].fields}
     if topic == "contributions":
         values["month"] = f"{date.today():%Y-%m}"
+    if topic == "cost":
+        values["month"] = f"{date.today():%Y}-01"
     values.update(given or {})
     if topic == "holiday":  # a date that is not one of the chips goes in the "Other date" box
         chips = {value for value, *_ in holiday_choices()}

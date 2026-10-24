@@ -49,6 +49,15 @@ holiday rules back, because no topic covered yearly pay. The salary calculator u
 DOLE handbook's equivalent-monthly-rate factors (pp. 20–21), and the question is now in the
 eval set.
 
+*Added 2026-10-24, cost of a worker:* owners deciding whether they can afford to hire ask
+what one worker costs in a year, which the other calculators answer only in pieces. It
+combines salary (monthly, or daily × DOLE's paid days ÷ 12), the employer shares and
+13th month pay from the first month on payroll through December. The result is charted
+twice: one stacked bar for where the money goes, and twelve stacked columns for the cash
+out each month, so the December 13th-month jump shows. Charts are HTML bars sized in
+percent, drawn on the server with no JavaScript; a legend and a month-by-month table
+carry every value.
+
 **Not in v1 (parked):** separation pay, night-shift differential, ordinary-day
 overtime, withholding tax, payslips, accounts or login, kasambahay and OFW
 contribution rules, monthly-paid holiday factors, a Filipino-language UI, any link

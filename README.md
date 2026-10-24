@@ -23,6 +23,8 @@ a DOLE complaint.
   rest days, and the exemption for small retail and service businesses.
 - **Final pay:** unpaid salary, pro-rated 13th month and unused leave converted to cash.
 - **SSS, PhilHealth, Pag-IBIG:** employee and employer shares for a monthly salary.
+- **Cost of a worker:** salary, employer shares and 13th month pay from the first month on
+  payroll through December, charted as where the money goes and the cash out each month.
 - **Ask a question:** returns the matching rule passages, or pre-fills a calculator for the
   owner to check. Anything outside these five topics gets "not covered" and the DOLE
   hotline, never a guess.
@@ -55,7 +57,7 @@ in URLs, access logs or analytics. Nothing is stored.
 
 | Measure | Target | Result |
 | --- | --- | --- |
-| Calculators vs official worked examples | 100% | all pass (`pytest`, 74 tests) |
+| Calculators vs official worked examples | 100% | all pass (`pytest`, 108 tests) |
 | Right rule in top 3 results | ≥ 90% | 96% (44/46) |
 | Out-of-scope questions refused | ≥ 19/20 | 20/20 |
 | In-scope questions answered, not refused | — | 41/46 |
@@ -80,12 +82,21 @@ uv sync
 uv run python -m app.search            # downloads the embedding model (~220 MB), builds the index
 uv run uvicorn app.main:app --reload   # http://127.0.0.1:8000
 uv run pytest
+uv run playwright install chromium     # once: the browser for the browser tests
+uv run pytest e2e                      # browser tests (Playwright) against a live server
 uv run python -m evals.run             # retrieval and not-covered evals
 uv run python -m evals.run extract     # extraction eval, needs GROQ_API_KEY
 ```
 
 Optional settings: `GROQ_API_KEY` (question-to-form), `GROQ_MODEL` (default
 `openai/gpt-oss-20b`), `GOATCOUNTER_CODE` (cookieless visit counts).
+
+## Workflow
+
+Gitflow: `main` holds released code, `develop` collects finished work. New work starts with
+`git flow feature start <name>` and merges back into `develop` once `uv run pytest` and
+`uv run pytest e2e` pass; releases go through `git flow release start <version>`. CI runs
+the unit tests, the evals and the browser tests on every push.
 
 ## Deploy
 

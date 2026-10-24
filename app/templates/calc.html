@@ -125,6 +125,7 @@
       {% if result.parts %}
       <p class="parts">Deduct from pay <strong>{{ peso(result.parts.employee) }}</strong> · Employer adds <strong>{{ peso(result.parts.employer) }}</strong></p>
       {% endif %}
+      {% if result.months %}{% include "_cost_charts.html" %}{% endif %}
       <dl class="lines">
         {% for label, amount in result.lines %}
         <div><dt>{{ label }}</dt><dd>{{ peso(amount) }}</dd></div>
