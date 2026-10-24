@@ -1,0 +1,52 @@
+{# Cost-of-a-worker charts: plain HTML bars sized in percent, no JavaScript. Every value
+   is also in the lines below and in the month-by-month table. #}
+{% set c = cost_chart(result.months) %}
+{% set year = result.months[0].month.year %}
+{% set salary_total = c.share[0][2] %}
+<p class="parts">On top of salary you pay <strong>{{ peso(result.total - salary_total) }}</strong>
+  ({{ '%.0f'|format((result.total - salary_total) * 100 / salary_total) }}% more).</p>
+
+<figure class="chart">
+  <figcaption>Where the money goes</figcaption>
+  <div class="share" role="img" aria-label="{% for key, label, amount, pct in c.share %}{{ label }} {{ '%.0f'|format(pct) }}%{% if not loop.last %}, {% endif %}{% endfor %}">
+    {% for key, label, amount, pct in c.share %}<span class="bar s-{{ key }}" style="flex-grow: {{ pct }}" title="{{ label }}: {{ peso(amount) }}"></span>{% endfor %}
+  </div>
+  <ul class="legend">
+    {% for key, label, amount, pct in c.share %}
+    <li><i class="key s-{{ key }}"></i><span>{{ label }}</span><span class="pct">{{ '%.0f'|format(pct) }}%</span></li>
+    {% endfor %}
+  </ul>
+</figure>
+
+<figure class="chart">
+  <figcaption>Cash out each month, {{ year }}</figcaption>
+  {% set peak = c.columns[c.peak] %}
+  <div class="cols" role="img" aria-label="Cash out each month. Highest in {{ peak.label }}: {{ peso(peak.total) }}. The table below lists every month.">
+    <div class="plot">
+      {% for label, pos in c.ticks %}<span class="tick" style="bottom: {{ pos }}%"><span>{{ label }}</span></span>{% endfor %}
+      {% for col in c.columns %}
+      <div class="col" title="{{ col.label }} {{ year }}: {% if col.segments %}{{ peso(col.total) }}{% else %}not on payroll{% endif %}">
+        {% for key, label, amount, h in col.segments %}<span class="bar s-{{ key }}" style="height: {{ h }}%"></span>{% endfor %}
+        {% if loop.index0 == c.peak %}<b class="peak" style="bottom: calc({{ col.height }}% + 4px)">₱{{ compact(col.total) }}</b>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    <div class="xlabels" aria-hidden="true">
+      {% for col in c.columns %}<span>{{ col.label[0] }}<span class="rest">{{ col.label[1:] }}</span></span>{% endfor %}
+    </div>
+  </div>
+  <details class="table-view">
+    <summary>Month by month</summary>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Month</th><th>Salary</th><th>Employer share</th><th>13th month</th><th>Total</th></tr></thead>
+        <tbody>
+          {% for m in result.months %}
+          <tr><td>{{ m.month.strftime('%b') }}</td><td>{{ peso(m.salary) }}</td><td>{{ peso(m.employer) }}</td>
+            <td>{{ peso(m.thirteenth) }}</td><td>{{ peso(m.salary + m.employer + m.thirteenth) }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </details>
+</figure>
