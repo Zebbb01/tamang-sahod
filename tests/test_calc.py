@@ -19,6 +19,7 @@ from app.calc import (
     salary,
     sss,
     thirteenth_month,
+    worker_cost,
 )
 
 OCT_2026 = date(2026, 10, 1)
@@ -211,3 +212,36 @@ def test_salary_rejects_bad_input():
         salary(D("500"), "fortnightly")
     with pytest.raises(ValueError):
         salary(D("500"), "six", unpaid_absences=D("400"))
+
+
+# --- Cost of a worker (salary + employer shares + 13th month, hand-checked from the figures above) ---
+
+def test_worker_cost_for_a_full_year_at_20k():
+    r = worker_cost(D("20000"), date(2026, 1, 1))
+    # Salary 12 × 20,000 + employer shares 12 × 2,730 + 13th month 240,000 ÷ 12
+    assert r.total == D("240000") + D("32760") + D("20000")
+    assert len(r.months) == 12
+    assert r.months[0] == {"month": date(2026, 1, 1), "salary": D("20000"), "employer": D("2730"),
+                           "thirteenth": D("0")}
+    assert r.months[-1]["thirteenth"] == D("20000")  # paid in December
+
+
+def test_worker_cost_hired_in_november_counts_two_months():
+    r = worker_cost(D("20000"), date(2026, 11, 1))
+    assert [m["month"].month for m in r.months] == [11, 12]
+    assert r.total == D("40000") + D("5460") + D("3333.33")
+
+
+def test_worker_cost_names_the_workers_own_share():
+    r = worker_cost(D("20000"), date(2026, 1, 1))
+    assert any("₱20,400.00" in n for n in r.notes)  # 12 × 1,700, deducted from pay, not an added cost
+
+
+def test_worker_cost_refuses_a_year_without_verified_rates():
+    with pytest.raises(NotCovered):
+        worker_cost(D("20000"), date(2027, 1, 1))
+
+
+def test_worker_cost_rejects_zero_salary():
+    with pytest.raises(ValueError):
+        worker_cost(D("0"), date(2026, 1, 1))

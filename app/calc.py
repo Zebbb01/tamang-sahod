@@ -65,6 +65,7 @@ class Result:
     notes: list[str] = field(default_factory=list)
     sources: list[str] = field(default_factory=list)
     parts: dict[str, Decimal] = field(default_factory=dict)
+    months: list[dict] = field(default_factory=list)  # month-by-month amounts, for the charts
 
 
 def peso(x: Decimal) -> Decimal:
@@ -286,3 +287,40 @@ def salary(
         "The real number of paid days shifts a little with each year's holidays.",
     ]
     return Result(yearly - absences, lines=lines, notes=notes, sources=["dole-handbook-2024"])
+
+
+# --- Cost of a worker to the employer (salary, employer shares, 13th month) ---
+
+def worker_cost(monthly: Decimal, start: date) -> Result:
+    """What one worker costs the owner from the start month through December."""
+    _check(monthly > 0, "Monthly salary must be more than ₱0.")
+    monthly = peso(monthly)
+    months, sources, employee = [], [], ZERO
+    for m in range(start.month, 13):
+        c = contributions(monthly, date(start.year, m, 1))
+        months.append({"month": date(start.year, m, 1), "salary": monthly, "employer": c.parts["employer"],
+                       "thirteenth": ZERO})
+        employee += c.parts["employee"]
+        sources = c.sources
+    worked = Decimal(len(months))
+    months[-1]["thirteenth"] = thirteenth_month(basic_earned(monthly, worked), worked).total
+    totals = {k: sum((m[k] for m in months), ZERO) for k in ("salary", "employer", "thirteenth")}
+    total = sum(totals.values(), ZERO)
+    return Result(
+        total,
+        lines=[
+            (f"Salary, {worked} months × ₱{monthly:,.2f}", totals["salary"]),
+            ("Employer share: SSS, PhilHealth, Pag-IBIG", totals["employer"]),
+            ("13th month pay, due by 24 December", totals["thirteenth"]),
+            ("Average a month", peso(total / worked)),
+        ],
+        notes=[
+            f"The worker's own share of the contributions, ₱{employee:,.2f} this year, is deducted from "
+            "their salary, so it is not an added cost.",
+            "Assumes the same salary every month. Overtime, holiday premiums, night differential, "
+            "service incentive leave and benefits your policy adds are not included.",
+            "13th month pay is one-twelfth of the salary earned this year.",
+        ],
+        sources=sources + ["pd-851", "dole-handbook-2024"],
+        months=months,
+    )
