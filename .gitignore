@@ -4,3 +4,4 @@ __pycache__/
 data/index/
 data/models/
 .env
+test-results/
