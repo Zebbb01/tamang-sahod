@@ -133,3 +133,23 @@ def test_switch_left_off_counts_as_off():
     # Regression: an empty switch value once counted as "on" (313 days instead of 305).
     result, _ = forms.compute("salary", forms.form_values("salary", {"rate": "500"}))
     assert result.total == 500 * 305
+
+
+def test_cost_of_a_worker_charts_each_month(client):
+    page = client.post("/calc/cost", data={"rate": "20,000", "rate_per": "month", "month": "2026-01"}).text
+    assert "₱292,760.00" in page             # 240,000 salary + 32,760 employer share + 20,000 13th month
+    assert "Jan 2026: ₱22,730.00" in page    # a month: salary + employer share
+    assert "Dec 2026: ₱42,730.00" in page    # December adds the 13th month pay
+    assert "Month by month" in page          # the table view of the chart
+
+
+def test_cost_from_a_daily_rate_uses_dole_paid_days(client):
+    page = client.post("/calc/cost", data={
+        "rate": "645", "rate_per": "day", "schedule": "six", "month": "2026-01"}).text
+    assert "₱16,393.75" in page  # ₱645 × 305 paid days ÷ 12
+
+
+def test_cost_before_hiring_month_shows_empty_columns(client):
+    page = client.post("/calc/cost", data={"rate": "20000", "rate_per": "month", "month": "2026-11"}).text
+    assert "Oct 2026: not on payroll" in page
+    assert "₱48,793.33" in page

@@ -13,7 +13,7 @@ from fastapi.responses import HTMLResponse, PlainTextResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from app import calc, forms
+from app import calc, charts, forms
 from app.forms import FORMS
 
 HERE = Path(__file__).resolve().parent
@@ -25,6 +25,8 @@ templates.env.globals.update(
     goatcounter=os.environ.get("GOATCOUNTER_CODE", ""),
     sources=forms.SOURCES,
     peso=lambda d: f"₱{d:,.2f}",
+    cost_chart=charts.cost_chart,
+    compact=charts.compact,
 )
 
 
